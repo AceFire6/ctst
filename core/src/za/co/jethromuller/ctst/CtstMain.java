@@ -24,7 +24,7 @@ public class CtstMain extends ApplicationAdapter {
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,1,1,1,0,0,1,1,1,0,0,0,1},
@@ -34,7 +34,7 @@ public class CtstMain extends ApplicationAdapter {
             {1,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+            {1,1,1,1,1,1,1,1,1,2,1,1,1,1,1},
     };
     protected int tileSize = 20;
     protected int mapWidth = map[0].length * tileSize;
@@ -165,29 +165,28 @@ public class CtstMain extends ApplicationAdapter {
      * Gets and adds the obstacles in the map that aren't on the edges of the map.
      */
     private void getObstacles() {
-        int x_pos;
-        int y_pos = mapHeight;
-        for (int[] ints : map) {
-            x_pos = mapWidth;
-            y_pos -= tileSize;
-            for (int anInt : ints) {
-                x_pos -= tileSize;
-                if (anInt == 1) {
-                    addEntity(new Entity(this, x_pos, y_pos, "game_pieces/block.png"));
-                } else if (anInt == 2) {
-                    Entity doorEntity = new Entity(this, x_pos, y_pos, "game_pieces/door.png");
-                    doorEntity.setDoor();
-                    addEntity(doorEntity);
+        for (int i = map.length - 1; i >= 0; i--) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] != 0) {
+                    int yLoc = (((map.length - 1) * tileSize) - (i * tileSize));
+                    if (map[i][j] == 1) {
+                        addEntity(new Entity(this, j * tileSize, yLoc, "game_pieces/block.png"));
+                    } else if (map[i][j] == 2) {
+                        Entity doorEntity = new Entity(this, j * tileSize, yLoc,
+                                                       "game_pieces/door.png");
+                        doorEntity.setDoor();
+                        addEntity(doorEntity);
 
-                    if (x_pos >= mapWidth - tileSize) {
-                        System.out.println("Rotating: 90 cw");
-                        doorEntity.rotate90(true);
-                    } else if (x_pos <= tileSize) {
-                        System.out.println("Rotating: 90 ccw");
-                        doorEntity.rotate90(false);
-                    } else if (y_pos > (2 * tileSize)) {
-                        System.out.println("Rotating: 180");
-                        doorEntity.rotate(180);
+                        if (j * tileSize >= mapWidth - tileSize) {
+                            System.out.println("Rotating: 90 cw");
+                            doorEntity.rotate90(true);
+                        } else if (j * tileSize <= tileSize) {
+                            System.out.println("Rotating: 90 ccw");
+                            doorEntity.rotate90(false);
+                        } else if (yLoc <= (2 * tileSize)) {
+                            System.out.println("Rotating: 180");
+                            doorEntity.rotate(180);
+                        }
                     }
                 }
             }
@@ -218,15 +217,11 @@ public class CtstMain extends ApplicationAdapter {
      * Draws the map based on the map's low resolution bitmap.
      */
     public void drawMap() {
-        int x_pos;
-        int y_pos = mapHeight;
-        for (int[] ints : map) {
-            x_pos = mapWidth;
-            y_pos -= tileSize;
-            for (int anInt :ints) {
-                x_pos -= tileSize;
-                if (anInt == 0) {
-                    batch.draw(groundTexture, x_pos, y_pos);
+        for (int i = map.length - 1; i >= 0; i--) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == 0) {
+                    batch.draw(groundTexture, j * tileSize,
+                               (((map.length - 1) * tileSize) - (i * tileSize)));
                 }
             }
         }

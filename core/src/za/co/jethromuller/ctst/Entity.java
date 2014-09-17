@@ -34,7 +34,7 @@ public class Entity extends Sprite {
         this.game = game;
         current_file = new FileHandle(fileName);
         bitSet = getBitMask(new Pixmap(current_file));
-        printBitmask();
+//        printBitmask();
     }
 
     /**

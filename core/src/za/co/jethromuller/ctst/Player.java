@@ -64,65 +64,12 @@ public class Player extends Entity {
     }
 
     /**
-     * Checks to see if, given the new X value, the player will intersect
-     * the game's borders.
-     * @param newX    The new x coordinate of the player.
-     * @return  boolean indicating whether or not a collision occurs.
-     */
-    public boolean worldBorderCollisionX(float newX) {
-        int tileSize = game.tileSize;
-        int x_val;
-
-        if (newX < tileSize - 2) {
-            x_val = tileSize - 2;
-            setX(x_val);
-            circleBounds.setPosition(x_val + circleBounds.radius, circleBounds.y + circleBounds.radius);
-            return true;
-        } else if (newX > tileSize * (game.map[0].length - 2) - 3) {
-            x_val = tileSize * (game.map[0].length - 2) - 3;
-            setX(x_val);
-            circleBounds.setPosition(x_val + circleBounds.radius, circleBounds.y + circleBounds.radius);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks to see if, given the new Y value, the player will intersect
-     * the game's borders.
-     * @param newY    The new y coordinate of the player.
-     * @return  boolean indicating whether or not a collision occurs.
-     */
-    public boolean worldBorderCollisionY(float newY) {
-        int tileSize = game.tileSize;
-        int y_val;
-        if (newY < tileSize - 2) {
-            y_val = tileSize - 2;
-            setY(y_val);
-            circleBounds.setPosition(circleBounds.x + circleBounds.radius, y_val + circleBounds.radius);
-            return true;
-        } else if (newY > tileSize * (game.map.length - 2) - 3) {
-            y_val = tileSize * (game.map.length - 2) - 3;
-            setY(y_val);
-            circleBounds.setPosition(circleBounds.x + circleBounds.radius, y_val + circleBounds.radius);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Performs all collision tests given the new X and Y coordinates of the player.
      * @param newX    New x coordinate of the player.
      * @param newY    New y coordinate of the player.
      */
     private void collisionDetection(float newX, float newY) {
         boolean collision = false;
-        if (worldBorderCollisionX(newX)) {
-            return;
-        }
-        if (worldBorderCollisionY(newY)) {
-            return;
-        }
 
         for (Entity entity : game.getEntities(this, newX, newY)) {
             if (entity.equals(this)) {
