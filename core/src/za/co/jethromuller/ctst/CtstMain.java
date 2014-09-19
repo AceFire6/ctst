@@ -61,8 +61,6 @@ public class CtstMain extends ApplicationAdapter {
 
     @Override
     public void create () {
-//        exit_door = new Sprite(new Texture("game_pieces/door.png"));
-
         batch = new SpriteBatch();
         Camera camera = new OrthographicCamera();
         Viewport viewport = new FitViewport(mapWidth, mapHeight, camera);

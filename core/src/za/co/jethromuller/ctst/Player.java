@@ -2,6 +2,8 @@ package za.co.jethromuller.ctst;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -17,6 +19,18 @@ public class Player extends Entity {
     private float radius;
     private boolean useCircle;
     protected Circle circleBounds;
+
+    //ALLLLL the textures
+    Texture up = new Texture("entities/player_up.png");
+    Texture down = new Texture("entities/player_down.png");
+    Texture left = new Texture("entities/player_left.png");
+    Texture right = new Texture("entities/player_right.png");
+
+    Texture upLeft = new Texture("entities/player_up_left.png");
+    Texture upRight = new Texture("entities/player_up_right.png");
+
+    Texture downLeft = new Texture("entities/player_down_left.png");
+    Texture downRight = new Texture("entities/player_down_right.png");
 
     /**
      * Creates a player object with the given parameters.
@@ -47,20 +61,40 @@ public class Player extends Entity {
         }
 
         if(Gdx.input.isKeyPressed(Keys.UP)) {
+            this.setTexture(up);
             deltaY = speed;
         }
         if(Gdx.input.isKeyPressed(Keys.DOWN)) {
+            this.setTexture(down);
             deltaY = -speed;
         }
         if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+            this.setTexture(left);
             deltaX = -speed;
         }
         if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+            this.setTexture(right);
             deltaX = speed;
         }
 
-        collisionDetection(getX() + deltaX, getY());
-        collisionDetection(getX(), getY() + deltaY);
+        if (deltaY > 0) {
+            if (deltaX > 0) {
+                setTexture(upRight);
+            } else if (deltaX < 0) {
+                setTexture(upLeft);
+            }
+        } else if (deltaY < 0) {
+            if (deltaX > 0) {
+                setTexture(downRight);
+            } else if (deltaX < 0) {
+                setTexture(downLeft);
+            }
+        }
+
+        if (deltaX != 0 || deltaY != 0) {
+            collisionDetection(getX() + deltaX, getY());
+            collisionDetection(getX(), getY() + deltaY);
+        }
     }
 
     /**
@@ -102,11 +136,15 @@ public class Player extends Entity {
                     BitSet overlayEntity = entity.bitSet[y_test2].get(x_test2,
                                                                       x_test2 + 1 + Math.abs(x_end -
                                                                                              x_start));
+                    bitSet = getBitMask(new Pixmap(current_file));
                     BitSet overlayPlayer = bitSet[y_test1 - 1].get(x_test1,
                                                                x_test1 + Math.abs(x_end - x_start));
                     overlayPlayer.and(overlayEntity);
                     if (overlayPlayer.cardinality() != 0) {
                         collision = true;
+                        if (entity.isDoor()) {
+                            System.out.println("WINRAR");
+                        }
                         break;
                     }
                 }

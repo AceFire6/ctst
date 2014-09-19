@@ -31,10 +31,23 @@ public class Entity extends Sprite {
     public Entity(CtstMain game, float x, float y, String fileName) {
         super(new Texture(fileName));
         setPosition(x, y);
-        this.game = game;
-        current_file = new FileHandle(fileName);
-        bitSet = getBitMask(new Pixmap(current_file));
+        setGame(game);
+        setCurrentFile(fileName);
 //        printBitmask();
+    }
+
+    public Entity() {
+
+    }
+
+    public void setGame(CtstMain game) {
+        this.game = game;
+    }
+
+    public void setCurrentFile(String filePath) {
+        setTexture(new Texture(filePath));
+        current_file = new FileHandle(filePath);
+        bitSet = getBitMask(new Pixmap(current_file));
     }
 
     /**
