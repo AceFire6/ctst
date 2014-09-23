@@ -1,63 +1,49 @@
 package za.co.jethromuller.ctst;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 
-/**
- * Main class that handles all the rendering and map and entities.
- */
-public class CtstMain extends ApplicationAdapter {
-    private SpriteBatch batch;
-    private Texture gameMap;
-
+public class Level {
     /**
      * Grid of the various map positions with each
      * grid square holding the entities that intersect the
      * square's coordinates.
      */
     private ArrayList<Entity>[][] mapGrid;
-    /**
-     * All the Entities
-     */
-    private ArrayList<Entity> entities;
-    private int cellSize;
 
-    int gridRows;
-    int gridCols;
-    private ShapeRenderer shapeRenderer;
+    private Texture gameMap;
+    private Texture obstacleMap;
+    private Texture gameMapDark;
+    private Texture shadowMap;
+
+    private Texture displayedMap;
+
     private Entity levelObstacles;
+    private ArrayList<Entity> entities;
 
-    @Override
-    public void create () {
-        batch = new SpriteBatch();
-        Camera camera = new OrthographicCamera();
-        Viewport viewport = new FitViewport(400, 400, camera);
-        viewport.apply(true);
+    private static String levelPath = "/levels/*/*_#.png";
+    private static int cellSize = 40;
 
-        batch.setProjectionMatrix(camera.projection);
-        batch.setTransformMatrix(camera.view);
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
 
-        Player player = new Player(this, 200, 200, "entities/player_down.png");
+    public Level(String level, Camera camera) {
+        levelPath = levelPath.replace("*", level);
+        gameMap = new Texture(levelPath.replace("_#", ""));
+        obstacleMap = new Texture(levelPath.replace("#", "obstacle"));
+        gameMapDark = new Texture(levelPath.replace("#", "no_light"));
+        shadowMap = new Texture(levelPath.replace("#", "shadows"));
+        displayedMap = gameMap;
 
         entities = new ArrayList<>();
 
         cellSize = ((int) (camera.viewportHeight / 10));
-        gridRows = (int) camera.viewportHeight / cellSize;
-        gridCols = (int) camera.viewportWidth / cellSize;
+        int gridRows = (int) camera.viewportHeight / cellSize;
+        int gridCols = (int) camera.viewportWidth / cellSize;
 
         mapGrid = new ArrayList[gridRows + 2][gridCols + 2];
         for (int i = 0; i < mapGrid.length; i++) {
@@ -65,13 +51,14 @@ public class CtstMain extends ApplicationAdapter {
                 mapGrid[i][j] = new ArrayList<>();
             }
         }
+    }
 
-        gameMap = new Texture("levels/level1_no_light.png");
-        addEntity(player);
-        levelObstacles = new Entity(this, "levels/level1_collisionMap.png");
-        levelObstacles.setCurrentFile("levels/level1_obstacles.png");
-        addEntity(new Entity(this, 50, 150, "entities/enemy.png"));
-        addEntity(new Entity(this, 180, 50, "entities/enemy.png"));
+    public void lightsOn() {
+        displayedMap = gameMap;
+    }
+
+    public void lightsOff() {
+        displayedMap = gameMapDark;
     }
 
     /**
@@ -119,32 +106,11 @@ public class CtstMain extends ApplicationAdapter {
         return possibleEntities;
     }
 
-    @Override
-    public void render () {
-        //Drawing
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        // Draws the bounding boxes if the spacebar is pressed.
-        batch.draw(gameMap, 0, 0);
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-            shapeRenderer.setColor(1, 1, 0, 1);
-            drawEntities(true);
-            shapeRenderer.end();
-        } else {
-            drawEntities(false);
-        }
-        batch.draw(levelObstacles, 0, 0);
-        batch.end();
-    }
-
     /**
      * Draws all the entities.
      * @param drawBounds    boolean indicating whether or not to draw the bounding boxes.
      */
-    public void drawEntities(boolean drawBounds) {
+    public void drawEntities(boolean drawBounds, SpriteBatch batch, ShapeRenderer shapeRenderer) {
         for (Entity entity : entities) {
             entity.update();
             entity.draw(batch);

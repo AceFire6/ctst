@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 
 import java.util.BitSet;
 
@@ -17,7 +16,6 @@ public class Player extends Entity {
 
     private int speed;
     private float radius;
-    private boolean useCircle;
     protected Circle circleBounds;
 
     //ALLLLL the textures
@@ -44,8 +42,7 @@ public class Player extends Entity {
         speed = 2;
         radius = (getWidth() / 2);
         circleBounds = new Circle();
-        circleBounds.set(x, y, radius);
-        useCircle = false;
+        circleBounds.set(x + radius, y + radius, radius);
     }
 
     /**
@@ -55,10 +52,6 @@ public class Player extends Entity {
     public void update() {
         float deltaX = 0;
         float deltaY = 0;
-
-        if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT)) {
-            useCircle = !useCircle;
-        }
 
         if(Gdx.input.isKeyPressed(Keys.UP)) {
             this.setTexture(up);
@@ -106,20 +99,13 @@ public class Player extends Entity {
         boolean collision = false;
 
         for (Entity entity : game.getEntities(this, newX, newY)) {
-            if (entity.equals(this)) {
+            if (entity instanceof Player) {
                 continue;
             }
 
-            Circle newCircle = null;
-            if (useCircle) {
-                newCircle = new Circle(newX + radius, newY + radius, radius);
-            }
-            Rectangle newRectangle = new Rectangle(newX, newY, getWidth(), getHeight());
-            if (((useCircle) ?
-                 Intersector.overlaps(newCircle, entity.getBoundingRectangle()) :
-                 Intersector.intersectRectangles(newRectangle, entity.getBoundingRectangle(),
-                                                 new Rectangle())))
-            {
+            Circle newCircle = new Circle(newX + radius, newY + radius, radius);
+
+            if (Intersector.overlaps(newCircle, entity.getBoundingRectangle())) {
                 int x_start = (int) Math.max(newX, entity.getX());
                 int y_start = ((int) Math.max(newY, entity.getY()));
 
@@ -128,23 +114,25 @@ public class Player extends Entity {
                 int y_end = ((int) Math.min(newY + this.getHeight(),
                                             entity.getY() + entity.getHeight()));
 
-                for (int y = 1; y < Math.abs(y_end - y_start); y++) {
-                    int y_test1 = Math.abs(((int) (y_start - newY))) + y;
+                for (int y = 0; y < Math.abs(y_end - y_start); y++) {
+                    System.out.println(y);
+                    int y_test1 = Math.abs((y_start - (int) newY)) + y;
                     int y_test2 = Math.abs(y_start - (int) entity.getY()) + y;
                     int x_test1 = Math.abs(((int) (x_start - newX)));
                     int x_test2 = Math.abs(((int) (x_start - entity.getX())));
+                    System.out.println("x_test1 = " + x_test1);
+                    System.out.println("y_test1 = " + y_test1);
+                    System.out.println("x_test2 = " + x_test2);
+                    System.out.println("y_test2 = " + y_test2);
                     BitSet overlayEntity = entity.bitSet[y_test2].get(x_test2,
-                                                                      x_test2 + 1 + Math.abs(x_end -
+                                                                      x_test2 + Math.abs(x_end -
                                                                                              x_start));
                     bitSet = getBitMask(new Pixmap(current_file));
-                    BitSet overlayPlayer = bitSet[y_test1 - 1].get(x_test1,
+                    BitSet overlayPlayer = bitSet[y_test1].get(x_test1,
                                                                x_test1 + Math.abs(x_end - x_start));
                     overlayPlayer.and(overlayEntity);
                     if (overlayPlayer.cardinality() != 0) {
                         collision = true;
-                        if (entity.isDoor()) {
-                            System.out.println("WINRAR");
-                        }
                         break;
                     }
                 }
@@ -155,13 +143,5 @@ public class Player extends Entity {
             setPosition(newX, newY);
             circleBounds.setPosition(newX + circleBounds.radius, newY + circleBounds.radius);
         }
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    public boolean useCircle() {
-        return useCircle;
     }
 }

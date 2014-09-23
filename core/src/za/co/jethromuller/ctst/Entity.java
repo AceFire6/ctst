@@ -33,11 +33,25 @@ public class Entity extends Sprite {
         setPosition(x, y);
         setGame(game);
         setCurrentFile(fileName);
+        setBitmask();
 //        printBitmask();
     }
 
     public Entity() {
+        super();
+    }
 
+    /**
+     * For big map things.
+     * @param game
+     * @param texturePath
+     */
+    public Entity(CtstMain game, String texturePath) {
+        super(new Texture(texturePath));
+        setGame(game);
+        setCurrentFile(texturePath);
+        setBitmask();
+        setPosition(0, 0);
     }
 
     public void setGame(CtstMain game) {
@@ -47,6 +61,9 @@ public class Entity extends Sprite {
     public void setCurrentFile(String filePath) {
         setTexture(new Texture(filePath));
         current_file = new FileHandle(filePath);
+    }
+
+    public void setBitmask() {
         bitSet = getBitMask(new Pixmap(current_file));
     }
 
@@ -93,6 +110,7 @@ public class Entity extends Sprite {
                 }
             }
         }
+        System.out.println("bitmask.length = " + bitmask.length);
         return bitmask;
     }
 
