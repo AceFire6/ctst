@@ -8,30 +8,30 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import java.util.BitSet;
 
 /**
- * A game entity that requires collision detection.
+ * A level entity that requires collision detection.
  * Extends the Sprite class.
  */
 public class Entity extends Sprite {
 
-    CtstMain game;
     private boolean isDoor;
     protected FileHandle current_file;
     /**
      * The bitmask of the given texture.
      */
     protected BitSet[] bitSet;
+    protected Level currentLevel;
 
     /**
      * Creates a new Entity with the given parameters.
-     * @param game        The game that is making the entity.
+     * @param level        The level that is making the entity.
      * @param x           The x coordinate of the entity.
      * @param y           The y coordinate of the entity.
      * @param fileName    The filename of the texture.
      */
-    public Entity(CtstMain game, float x, float y, String fileName) {
+    public Entity(Level level, float x, float y, String fileName) {
         super(new Texture(fileName));
         setPosition(x, y);
-        setGame(game);
+        setLevel(level);
         setCurrentFile(fileName);
         setBitmask();
 //        printBitmask();
@@ -43,19 +43,19 @@ public class Entity extends Sprite {
 
     /**
      * For big map things.
-     * @param game
+     * @param level
      * @param texturePath
      */
-    public Entity(CtstMain game, String texturePath) {
+    public Entity(Level level, String texturePath) {
         super(new Texture(texturePath));
-        setGame(game);
+        setLevel(level);
         setCurrentFile(texturePath);
         setBitmask();
         setPosition(0, 0);
     }
 
-    public void setGame(CtstMain game) {
-        this.game = game;
+    public void setLevel(Level level) {
+        this.currentLevel = level;
     }
 
     public void setCurrentFile(String filePath) {

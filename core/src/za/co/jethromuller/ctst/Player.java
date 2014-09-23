@@ -32,13 +32,13 @@ public class Player extends Entity {
 
     /**
      * Creates a player object with the given parameters.
-     * @param game        The game that created this entity.
+     * @param level        The level that created this entity.
      * @param x           The x coordinate of the player entity.
      * @param y           The y coordinate of the player entity.
      * @param fileName    The filename of the texture for this entity.
      */
-    public Player(CtstMain game, float x, float y, String fileName) {
-        super(game, x, y, fileName);
+    public Player(Level level, float x, float y, String fileName) {
+        super(level, x, y, fileName);
         speed = 2;
         radius = (getWidth() / 2);
         circleBounds = new Circle();
@@ -98,7 +98,7 @@ public class Player extends Entity {
     private void collisionDetection(float newX, float newY) {
         boolean collision = false;
 
-        for (Entity entity : game.getEntities(this, newX, newY)) {
+        for (Entity entity : currentLevel.getEntities(this, newX, newY)) {
             if (entity instanceof Player) {
                 continue;
             }

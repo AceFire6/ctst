@@ -18,23 +18,22 @@ public class Level {
     private ArrayList<Entity>[][] mapGrid;
 
     private Texture gameMap;
-    private Texture obstacleMap;
     private Texture gameMapDark;
     private Texture shadowMap;
+    private Entity levelObstacles;
 
     private Texture displayedMap;
 
-    private Entity levelObstacles;
     private ArrayList<Entity> entities;
 
-    private static String levelPath = "/levels/*/*_#.png";
+    private static String levelPath = "levels/*/*_#.png";
     private static int cellSize = 40;
 
 
     public Level(String level, Camera camera) {
         levelPath = levelPath.replace("*", level);
         gameMap = new Texture(levelPath.replace("_#", ""));
-        obstacleMap = new Texture(levelPath.replace("#", "obstacle"));
+        levelObstacles = new Entity(this, levelPath.replace("#", "collisionMap"));
         gameMapDark = new Texture(levelPath.replace("#", "no_light"));
         shadowMap = new Texture(levelPath.replace("#", "shadows"));
         displayedMap = gameMap;
@@ -123,5 +122,9 @@ public class Level {
                 }
             }
         }
+    }
+
+    public void drawMap(SpriteBatch batch) {
+        batch.draw(gameMap, 0, 0);
     }
 }
