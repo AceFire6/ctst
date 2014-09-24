@@ -110,7 +110,7 @@ public class Entity extends Sprite {
                 }
             }
         }
-        System.out.println("bitmask.length = " + bitmask.length);
+//        System.out.println("bitmask.length = " + bitmask.length);
         return bitmask;
     }
 
