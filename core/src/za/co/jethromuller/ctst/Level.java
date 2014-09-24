@@ -19,7 +19,7 @@ public class Level {
 
     private Texture gameMap;
     private Texture gameMapDark;
-    private Texture shadowMap;
+    private Entity shadowMap;
     private Entity levelObstacles;
 
     private Texture displayedMap;
@@ -28,14 +28,17 @@ public class Level {
 
     private static String levelPath = "levels/*/*_#.png";
     private static int cellSize = 40;
+    private boolean lightsOff;
 
 
     public Level(String level, Camera camera) {
+        lightsOff = false;
         levelPath = levelPath.replace("*", level);
         gameMap = new Texture(levelPath.replace("_#", ""));
         levelObstacles = new Entity(this, levelPath.replace("#", "collisionMap"));
         gameMapDark = new Texture(levelPath.replace("#", "no_light"));
-        shadowMap = new Texture(levelPath.replace("#", "shadows"));
+        shadowMap = new Entity(this, levelPath.replace("#", "shadows"));
+
         displayedMap = gameMap;
 
         entities = new ArrayList<>();
@@ -54,10 +57,12 @@ public class Level {
 
     public void lightsOn() {
         displayedMap = gameMap;
+        lightsOff = false;
     }
 
     public void lightsOff() {
         displayedMap = gameMapDark;
+        lightsOff = true;
     }
 
     /**
@@ -125,6 +130,12 @@ public class Level {
     }
 
     public void drawMap(SpriteBatch batch) {
-        batch.draw(gameMap, 0, 0);
+        batch.draw(displayedMap, 0, 0);
+    }
+
+    public boolean inShadow(Player player) {
+        return lightsOff ||
+               player.isPixelPerfectCollision(shadowMap, player.getX(), player.getY(),
+                                              player.getWidth() - 10, player.getHeight() - 10);
     }
 }
