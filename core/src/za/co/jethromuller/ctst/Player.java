@@ -96,52 +96,55 @@ public class Player extends Entity {
      * @param newY    New y coordinate of the player.
      */
     private void collisionDetection(float newX, float newY) {
-        boolean collision = false;
-
         for (Entity entity : currentLevel.getEntities(this, newX, newY)) {
-            if (entity instanceof Player) {
-                continue;
+            if (isPixelPerfectCollision(entity, newX, newY, getWidth(), getHeight())) {
+                return;
             }
+        }
 
-            Circle newCircle = new Circle(newX + radius, newY + radius, radius);
+        setPosition(newX, newY);
+        circleBounds.setPosition(newX + circleBounds.radius, newY + circleBounds.radius);
 
-            if (Intersector.overlaps(newCircle, entity.getBoundingRectangle())) {
-                int x_start = (int) Math.max(newX, entity.getX());
-                int y_start = ((int) Math.max(newY, entity.getY()));
+    }
 
-                int x_end = ((int) Math.min(newX + this.getWidth(),
-                                            entity.getX() + entity.getWidth()));
-                int y_end = ((int) Math.min(newY + this.getHeight(),
-                                            entity.getY() + entity.getHeight()));
+    public boolean isPixelPerfectCollision(Entity entity, float newX, float newY, float width,
+                                           float height) {
+        if (entity instanceof Player) {
+            return false;
+        }
 
-                for (int y = 0; y < Math.abs(y_end - y_start); y++) {
-                    System.out.println(y);
-                    int y_test1 = Math.abs((y_start - (int) newY)) + y;
-                    int y_test2 = Math.abs(y_start - (int) entity.getY()) + y;
-                    int x_test1 = Math.abs(((int) (x_start - newX)));
-                    int x_test2 = Math.abs(((int) (x_start - entity.getX())));
-                    System.out.println("x_test1 = " + x_test1);
-                    System.out.println("y_test1 = " + y_test1);
-                    System.out.println("x_test2 = " + x_test2);
-                    System.out.println("y_test2 = " + y_test2);
-                    BitSet overlayEntity = entity.bitSet[y_test2].get(x_test2,
-                                                                      x_test2 + Math.abs(x_end -
-                                                                                             x_start));
-                    bitSet = getBitMask(new Pixmap(current_file));
-                    BitSet overlayPlayer = bitSet[y_test1].get(x_test1,
-                                                               x_test1 + Math.abs(x_end - x_start));
-                    overlayPlayer.and(overlayEntity);
-                    if (overlayPlayer.cardinality() != 0) {
-                        collision = true;
-                        break;
-                    }
+        Circle newCircle = new Circle(newX + radius, newY + radius, radius);
+
+        if (Intersector.overlaps(newCircle, entity.getBoundingRectangle())) {
+            int x_start = (int) Math.max(newX, entity.getX());
+            int y_start = ((int) Math.max(newY, entity.getY()));
+
+            int x_end = ((int) Math.min(newX + width,
+                                        entity.getX() + entity.getWidth()));
+            int y_end = ((int) Math.min(newY + height,
+                                        entity.getY() + entity.getHeight()));
+
+            for (int y = 0; y < Math.abs(y_end - y_start); y++) {
+                int y_test1 = Math.abs((y_start - (int) newY)) + y;
+                int y_test2 = Math.abs(y_start - (int) entity.getY()) + y;
+                int x_test1 = Math.abs(((int) (x_start - newX)));
+                int x_test2 = Math.abs(((int) (x_start - entity.getX())));
+//                System.out.println("x_test1 = " + x_test1);
+//                System.out.println("y_test1 = " + y_test1);
+//                System.out.println("x_test2 = " + x_test2);
+//                System.out.println("y_test2 = " + y_test2);
+                BitSet overlayEntity = entity.bitSet[y_test2].get(x_test2 + 1,
+                                                                  x_test2 + Math.abs(x_end -
+                                                                                     x_start));
+                bitSet = getBitMask(new Pixmap(current_file));
+                BitSet overlayPlayer = bitSet[y_test1].get(x_test1 + 1,
+                                                           x_test1 + Math.abs(x_end - x_start));
+                overlayPlayer.and(overlayEntity);
+                if (overlayPlayer.cardinality() != 0) {
+                    return true;
                 }
             }
         }
-
-        if (!collision) {
-            setPosition(newX, newY);
-            circleBounds.setPosition(newX + circleBounds.radius, newY + circleBounds.radius);
-        }
+        return false;
     }
 }
