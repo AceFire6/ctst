@@ -29,6 +29,7 @@ public class Level {
     private static String levelPath = "levels/*/*_#.png";
     private static int cellSize = 40;
     private boolean lightsOff;
+    private Player player;
 
 
     public Level(String level, Camera camera) {
@@ -72,16 +73,20 @@ public class Level {
      */
     public void addEntity(Entity entity) {
         entities.add(entity);
-        int topLeftX = ((int) (entity.getX() / cellSize));
-        int topLeftY = ((int) (entity.getY() / cellSize));
+        if (!(entity instanceof Player)) {
+            int topLeftX = ((int) (entity.getX() / cellSize));
+            int topLeftY = ((int) (entity.getY() / cellSize));
 
-        int bottomRightX = ((int) ((entity.getX() + entity.getWidth()) / cellSize));
-        int bottomRightY = ((int) ((entity.getY() + entity.getHeight()) / cellSize));
+            int bottomRightX = ((int) ((entity.getX() + entity.getWidth()) / cellSize));
+            int bottomRightY = ((int) ((entity.getY() + entity.getHeight()) / cellSize));
 
-        for (int i = topLeftY; i <= bottomRightY; i++) {
-            for (int j = topLeftX; j <= bottomRightX; j++) {
-                mapGrid[i][j].add(entity);
+            for (int i = topLeftY; i <= bottomRightY; i++) {
+                for (int j = topLeftX; j <= bottomRightX; j++) {
+                    mapGrid[i][j].add(entity);
+                }
             }
+        } else {
+            player = ((Player) entity);
         }
     }
 
