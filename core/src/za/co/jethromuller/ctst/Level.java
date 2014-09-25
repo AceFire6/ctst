@@ -66,6 +66,16 @@ public class Level {
         lightsOff = true;
     }
 
+    private int[] getGridCoords(Entity entity) {
+        int topLeftX = ((int) (entity.getX() / cellSize));
+        int topLeftY = ((int) (entity.getY() / cellSize));
+
+        int bottomRightX = ((int) ((entity.getX() + entity.getWidth()) / cellSize));
+        int bottomRightY = ((int) ((entity.getY() + entity.getHeight()) / cellSize));
+
+        return new int[] {topLeftY, bottomRightY, topLeftX, bottomRightX};
+    }
+
     /**
      * Adds an entity to the entities list and the
      * mapGrid in the correct cells.
@@ -74,14 +84,10 @@ public class Level {
     public void addEntity(Entity entity) {
         entities.add(entity);
         if (!(entity instanceof Player)) {
-            int topLeftX = ((int) (entity.getX() / cellSize));
-            int topLeftY = ((int) (entity.getY() / cellSize));
+            int[] coords = getGridCoords(entity);
 
-            int bottomRightX = ((int) ((entity.getX() + entity.getWidth()) / cellSize));
-            int bottomRightY = ((int) ((entity.getY() + entity.getHeight()) / cellSize));
-
-            for (int i = topLeftY; i <= bottomRightY; i++) {
-                for (int j = topLeftX; j <= bottomRightX; j++) {
+            for (int i = coords[0]; i <= coords[1]; i++) {
+                for (int j = coords[2]; j <= coords[3]; j++) {
                     mapGrid[i][j].add(entity);
                 }
             }
