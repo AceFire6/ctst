@@ -2,7 +2,7 @@ package za.co.jethromuller.ctst.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import za.co.jethromuller.ctst.CtstMain;
+import za.co.jethromuller.ctst.CtstGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
@@ -11,6 +11,6 @@ public class DesktopLauncher {
         config.title = "Climbing Towers, Stealing Treasure";
         config.width = 600;
         config.height = 600;
-		new LwjglApplication(new CtstMain(), config);
+		new LwjglApplication(new CtstGame(), config);
 	}
 }

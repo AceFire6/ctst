@@ -1,6 +1,6 @@
 package za.co.jethromuller.ctst;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,10 +14,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Main class that handles all the rendering and map and entities.
  */
-public class CtstMain extends ApplicationAdapter {
+public class CtstGame extends Game {
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private OrthogonalTiledMapRenderer mapRenderer;
     private ShapeRenderer shapeRenderer;
     private Level currentLevel;
 
@@ -48,7 +47,8 @@ public class CtstMain extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        mapRenderer = new OrthogonalTiledMapRenderer(currentLevel.getGameMap());
+        OrthogonalTiledMapRenderer mapRenderer =
+                new OrthogonalTiledMapRenderer(currentLevel.getGameMap());
         mapRenderer.setView(camera);
         mapRenderer.render();
 
