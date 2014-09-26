@@ -40,8 +40,6 @@ public class CtstMain extends ApplicationAdapter {
         currentLevel.addEntity(player);
         currentLevel.addEntity(new Entity(currentLevel, 50, 150, "entities/enemy.png"));
         currentLevel.addEntity(new Entity(currentLevel, 180, 50, "entities/enemy.png"));
-
-        mapRenderer = new OrthogonalTiledMapRenderer(currentLevel.getGameMap());
     }
 
     @Override
@@ -50,6 +48,7 @@ public class CtstMain extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        mapRenderer = new OrthogonalTiledMapRenderer(currentLevel.getGameMap());
         mapRenderer.setView(camera);
         mapRenderer.render();
 
