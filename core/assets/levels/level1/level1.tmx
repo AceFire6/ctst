@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="20" tileheight="20">
+ <tileset firstgid="1" name="level1" tilewidth="20" tileheight="20">
+  <image source="level1.png" width="400" height="400"/>
+ </tileset>
+ <tileset firstgid="401" name="level1_no_light" tilewidth="20" tileheight="20">
+  <image source="level1_no_light.png" width="400" height="400"/>
+ </tileset>
+ <layer name="gameMapDark" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwN03WDDwYAANCfO3G663TbZkyPzcQwG5taYWKbbibGmNxMT7vjdDen63R3d3eeczrfH+8jvBFxAoGRjGI0YxjLOMYTRjgTmEgEk5jMFKYyjenMYCazmM0c5jKP+SxgIYtYzBKWsoxIlrOClaxiNWtYyzrWs4GNRLGJzWxhK9vYzg52sovd7GEv+9jPAQ5yiMMc4SjHOM4JTnKK05zhLOc4zwUuconLXOEq17jODW5yi9vc4S73uM8DHhLNI2J4TCxPeMoznvOCl7ziNW94yzsCQYFAHIIIJi7xiE8CQkhIIhKThKQkIzkpSEkqUpOGtKQjPRnISCiZyEwWspKN7OQgJ7nITR7yko/8fMCHfEQBPqYghfiEwhShKMUoTglK8imlKM1nfE4ZvqAs5ShPBb6kIpWozFdU4Wu+oSrV+JbvqE4NalKL2nzPD/zIT/xMHepSj1+oTwMa0ohf+Y3faUwTmtKM5rSgJa1oTRva0o72dKAjf9CJznShK3/Sje78RQ968je96E0f+tKP/vzDvwzgPwYyiMEMYSjDGM7/jGAkoxjNGMYyjvGEEc4EJhLBJCYzhalMYzozmMksZjOHucxjPgtYyCIWs4SlLCOS5axgJatYzRrWso71bGAjUWxiM1vYyja2s4Od7GI3e9jLPvZzgIMc4jBHOMoxjnOCk5ziNGc4yznOc4GLXOIyV7jKNa5zg5vc4jZ3uMs97vOAh0TziBgeE8sTnvKM57zgJa94zRve8o5AsP8EEUxc4hGfBISQkEQkJglJSUZyUpCSVKQmDWlJR3oykJFQMpGZLGQlG9l5D/IW2xs=
+  </data>
+ </layer>
+ <layer name="gameMapLight" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwNwwOUEAYAANDLti5c9uUuX7Ztuy67u2wbW27L3DK22rJtY4tb3OJQ/73/IwUEBEQ2ilGNZnRjGNNYxjaOcY1nfBOY0EQmNolJTWZyUxhoSlOZ2jQGmdZ0pjeDGc1kZrOY1WxmN4c5DTaXuc1jXvOZ3wIWNMRCFraIRS1mcUsYaklLWdoylrWc5a1gRStZ2SpWtZrVrWFNa1nbOta1nvVtYEMb2dgmNrWZzW1hS1vZ2ja2tZ3t7WBHO9nZLnY1zG52t4c97WVv+9jXfvZ3gAMd5GDDjXCIQx3mcEc40lGOdoxjHed4JzjRSU52ilOd5nRnONNZznaOc53nfL/xWxe40EUudolLXeZyv/N7V7jSVa52jWtd53o3uNFNbvYHf3SLW93mdne4013udo97/cmf3ed+f/FXD3jQQx72iEc95nFPeNJTnvaMZz3neS940Ute9opXveZ1b3jTW972jne9530f+NDf/N1HPvaJT33mc//wT1/40le+9o1v/cu/fed7P/jRT372H//1P//3iwGRMLJRjGo0oxvDmMYytnGMazzjm8CEJjKxSUxqMpObwkBTmsrUpjHItKYzvRnMaCYzm8WsZjO7OcxpsLnMbR7zms/8FrCgIRaysEUsajGLW8JQS1rK0paxrOUsbwUrWsnKVrGq1axuDWtay9rWsa71rG8DG9rIxjaxqc1sbgtb2srWtrGt7WxvBzvayc52sathdrO7PexpL3vbx772s78DHOggBxtuhEMc6jCHO8KRjnK0YxzrOMc7wYlOcrJTnOo0pzvDmX4FUpio2g==
+  </data>
+ </layer>
+ <objectgroup name="shadows" width="20" height="20" visible="0">
+  <object x="18" y="19">
+   <polygon points="-1,-5 338,-3 281,57 0,43"/>
+  </object>
+  <object x="261" y="161">
+   <polygon points="0,0 121,-108 119,10 16,59"/>
+  </object>
+  <object x="261" y="261">
+   <polygon points="0,0 121,-41 119,30 17,40"/>
+  </object>
+  <object x="279" y="321">
+   <polygon points="0,0 101,0 102,60 -2,58"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="obstacles" width="20" height="20">
+  <object name="wall" x="21" y="61" width="281" height="18"/>
+  <object name="wall" x="14" y="17" width="5" height="367"/>
+  <object name="wall" x="17" y="380" width="293" height="5"/>
+  <object name="wall" x="15" y="13" width="371" height="7"/>
+  <object name="wall" x="379" y="17" width="6" height="364"/>
+  <object name="wall" x="259" y="160" width="21" height="60"/>
+  <object name="wall" x="260" y="260" width="20" height="39"/>
+  <object name="wall" x="259" y="320" width="20" height="60"/>
+  <object name="fire" x="68" y="307" width="25" height="24">
+   <ellipse/>
+  </object>
+  <object name="wall" x="355" y="379" width="36" height="7"/>
+  <object name="exit" x="310" y="372" width="46" height="10">
+   <properties>
+    <property name="exit" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
