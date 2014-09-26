@@ -30,7 +30,7 @@
    <polygon points="0,0 101,0 102,60 -2,58"/>
   </object>
  </objectgroup>
- <objectgroup name="obstacles" width="20" height="20">
+ <objectgroup name="obstacles" width="20" height="20" visible="0">
   <object name="wall" x="21" y="61" width="281" height="18"/>
   <object name="wall" x="14" y="17" width="5" height="367"/>
   <object name="wall" x="17" y="380" width="293" height="5"/>
