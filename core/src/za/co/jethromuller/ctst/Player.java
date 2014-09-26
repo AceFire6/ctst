@@ -12,9 +12,9 @@ import com.badlogic.gdx.math.Intersector;
  */
 public class Player extends Entity {
 
-    private int speed;
     private float radius;
     protected Circle circleBounds;
+    private boolean sneaking;
 
     //ALLLLL the textures
     Texture up = new Texture("entities/player_up.png");
@@ -37,10 +37,10 @@ public class Player extends Entity {
      */
     public Player(Level level, float x, float y, String fileName) {
         super(level, x, y, fileName);
-        speed = 2;
         radius = (getWidth() / 2);
         circleBounds = new Circle();
         circleBounds.set(x + radius, y + radius, radius);
+        sneaking = false;
     }
 
     /**
@@ -50,6 +50,17 @@ public class Player extends Entity {
     public void update() {
         float deltaX = 0;
         float deltaY = 0;
+        int speed;
+
+        if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT)) {
+            sneaking = !sneaking;
+        }
+
+        if (!sneaking) {
+            speed = 2;
+        } else {
+            speed = 1;
+        }
 
         if(Gdx.input.isKeyPressed(Keys.UP)) {
             this.setTexture(up);
