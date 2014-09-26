@@ -2,10 +2,18 @@ package za.co.jethromuller.ctst;
 
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Ellipse;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 
@@ -15,54 +23,57 @@ public class Level {
      * grid square holding the entities that intersect the
      * square's coordinates.
      */
-    private ArrayList<Entity>[][] mapGrid;
+    private Array<Entity>[][] mapGrid;
 
-    private Texture gameMap;
-    private Texture gameMapDark;
-    private Entity shadowMap;
-    private Entity levelObstacles;
+    private TiledMap gameMap;
 
-    private Texture displayedMap;
+    private Array<RectangleMapObject> obstacles;
+    private Circle roomLight;
+    private Array<PolygonMapObject> shadows;
 
-    private ArrayList<Entity> entities;
+    private Array<Entity> entities;
 
-    private static String levelPath = "levels/*/*_#.png";
+    private static String levelPath = "levels/*/*.tmx";
     private static int cellSize = 40;
     private boolean lightsOff;
-    private Player player;
 
 
     public Level(String level, Camera camera) {
+        gameMap = new TmxMapLoader().load(levelPath.replace("*", level));
+        obstacles = gameMap.getLayers().get("obstacles").getObjects().getByType(RectangleMapObject
+                                                                                                .class);
+
+        Ellipse ellipse = ((EllipseMapObject) gameMap.getLayers().get("obstacles").getObjects().get
+                ("fire")).getEllipse();
+        int radius = ((int) (ellipse.circumference() / 6));
+        roomLight = new Circle(ellipse.x + radius, ellipse.y + radius, radius);
+
+        shadows = gameMap.getLayers().get("shadows").getObjects().getByType(PolygonMapObject.class);
+
         lightsOff = false;
         levelPath = levelPath.replace("*", level);
-        gameMap = new Texture(levelPath.replace("_#", ""));
-        levelObstacles = new Entity(this, levelPath.replace("#", "collisionMap"));
-        gameMapDark = new Texture(levelPath.replace("#", "no_light"));
-        shadowMap = new Entity(this, levelPath.replace("#", "shadows"));
 
-        displayedMap = gameMap;
-
-        entities = new ArrayList<>();
+        entities = new Array<>();
 
         cellSize = ((int) (camera.viewportHeight / 10));
         int gridRows = (int) camera.viewportHeight / cellSize;
         int gridCols = (int) camera.viewportWidth / cellSize;
 
-        mapGrid = new ArrayList[gridRows + 2][gridCols + 2];
+        mapGrid = new Array[gridRows + 2][gridCols + 2];
         for (int i = 0; i < mapGrid.length; i++) {
             for (int j = 0; j < mapGrid[0].length; j++) {
-                mapGrid[i][j] = new ArrayList<>();
+                mapGrid[i][j] = new Array<>();
             }
         }
     }
 
     public void lightsOn() {
-        displayedMap = gameMap;
+        gameMap.getLayers().get("gameMapLight").setVisible(true);
         lightsOff = false;
     }
 
     public void lightsOff() {
-        displayedMap = gameMapDark;
+        gameMap.getLayers().get("gameMapLight").setVisible(false);
         lightsOff = true;
     }
 
@@ -91,8 +102,6 @@ public class Level {
                     mapGrid[i][j].add(entity);
                 }
             }
-        } else {
-            player = ((Player) entity);
         }
     }
 
@@ -117,7 +126,6 @@ public class Level {
                 }
             }
         }
-        possibleEntities.add(levelObstacles);
         return possibleEntities;
     }
 
@@ -140,13 +148,46 @@ public class Level {
         }
     }
 
-    public void drawMap(SpriteBatch batch) {
-        batch.draw(displayedMap, 0, 0);
+    public boolean inShadow(Player player) {
+        if (lightsOff) {
+            return true;
+        } else {
+            for (PolygonMapObject shadow : shadows) {
+                Polygon shadowPolygon = shadow.getPolygon();
+                float x1 = player.getBoundingRectangle().getX();
+                float x2 = x1 + player.getBoundingRectangle().getWidth()/2;
+                float y1 = player.getBoundingRectangle().getY();
+                float y2 = x1 + player.getBoundingRectangle().getHeight()/2;
+
+                for (float y = y1; y < y2; y++) {
+                    for (float x = x1; x < x2; x++) {
+                        if (shadowPolygon.contains(x, y)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
-    public boolean inShadow(Player player) {
-        return lightsOff ||
-               player.isPixelPerfectCollision(shadowMap, player.getX(), player.getY(),
-                                              player.getWidth() - 10, player.getHeight() - 10);
+    public Array<RectangleMapObject> getObstacles() {
+        return obstacles;
+    }
+
+    public TiledMap getGameMap() {
+        return gameMap;
+    }
+
+    public Circle getLightSource() {
+        return roomLight;
+    }
+
+    public void drawBounds(ShapeRenderer shapeRenderer) {
+        for (RectangleMapObject rectangleMapObject : getObstacles()) {
+            Rectangle rect = rectangleMapObject.getRectangle();
+            shapeRenderer.rect(rect.x, rect.y, rect.getWidth(), rect.getHeight());
+        }
+        shapeRenderer.circle(roomLight.x, roomLight.y, roomLight.radius);
     }
 }
