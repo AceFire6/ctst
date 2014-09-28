@@ -3,7 +3,6 @@ package za.co.jethromuller.ctst.menus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,8 +18,6 @@ public class PauseMenu implements Screen {
     private CtstGame game;
     private Texture pauseMenu;
 
-    private Sound selectSound;
-
     private int option = 0;
     private int[] yCoords = {275, 235};
     private Level currentLevel;
@@ -32,8 +29,6 @@ public class PauseMenu implements Screen {
         batch = game.getBatch();
         pauseMenu = new Texture(Gdx.files.internal ("pause_menu.png"));
         this.currentLevel = currentLevel;
-
-        selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
     }
 
     @Override
@@ -43,10 +38,10 @@ public class PauseMenu implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             option = (option > 0 ? option - 1: option);
-            selectSound.play();
+            game.musicController.playSelectSound();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             option = (option < 1 ? option + 1: option);
-            selectSound.play();
+            game.musicController.playSelectSound();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (option) {
                 case 0:
