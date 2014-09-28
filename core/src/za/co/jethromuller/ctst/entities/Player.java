@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import za.co.jethromuller.ctst.Level;
 
 /**
@@ -34,10 +35,9 @@ public class Player extends Entity {
      * @param level        The level that created this entity.
      * @param x           The x coordinate of the player entity.
      * @param y           The y coordinate of the player entity.
-     * @param fileName    The filename of the texture for this entity.
      */
-    public Player(Level level, float x, float y, String fileName) {
-        super(level, x, y, fileName);
+    public Player(Level level, float x, float y) {
+        super(level, x, y, "entities/player_down.png");
         radius = (getWidth() / 2);
         circleBounds = new Circle();
         circleBounds.set(x + radius, y + radius, radius);
@@ -112,15 +112,17 @@ public class Player extends Entity {
             return;
         }
 
-        for (RectangleMapObject rect: currentLevel.getObstacles()) {
-            if (Intersector.overlaps(newCircle, rect.getRectangle())) {
-                return;
-            }
-        }
-
-        for (Entity entity : currentLevel.getEntities(this, newX, newY)) {
-            if (Intersector.overlaps(newCircle, entity.getBoundingRectangle())) {
-                return;
+        for (Object entity : currentLevel.getEntities(this, newX, newY)) {
+            if (entity instanceof Entity) {
+                Entity ent = (Entity) entity;
+                if (Intersector.overlaps(newCircle, ent.getBoundingRectangle())) {
+                    return;
+                }
+            } else if (entity instanceof RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) entity).getRectangle();
+                if (Intersector.overlaps(newCircle, rect)) {
+                    return;
+                }
             }
         }
 

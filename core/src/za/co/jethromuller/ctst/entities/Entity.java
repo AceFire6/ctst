@@ -54,19 +54,37 @@ public class Entity extends Sprite {
      * @param newY    New y coordinate of the player.
      */
     protected void collisionDetection(float newX, float newY) {
-        Rectangle newBounds = new Rectangle(newX, newY, newX + getWidth(), newY + getHeight());
-        for (RectangleMapObject rect: currentLevel.getObstacles()) {
-            if (Intersector.overlaps(newBounds, rect.getRectangle())) {
-                return;
+        Rectangle newBounds = new Rectangle(newX, newY, getWidth(), getHeight());
+        if (Intersector.overlaps(currentLevel.getLightSource(), newBounds)) {
+            return;
+        }
+
+        for (Object entity : currentLevel.getEntities(this, newX, newY)) {
+            if (entity instanceof Entity) {
+                Entity ent = (Entity) entity;
+                if (!entity.equals(this)) {
+                    if (Intersector.overlaps(newBounds, ent.getBoundingRectangle())) {
+                        return;
+                    }
+                }
+            } else if (entity instanceof RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) entity).getRectangle();
+                if (Intersector.overlaps(newBounds, rect)) {
+                    return;
+                }
             }
         }
 
-        for (Entity entity : currentLevel.getEntities(this, newX, newY)) {
-            if (Intersector.overlaps(newBounds, entity.getBoundingRectangle())) {
-                return;
-            }
-        }
 
         setPosition(newX, newY);
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Entity)) {
+            return false;
+        }
+        Entity entity = (Entity) obj;
+
+        return (entity.getX() == getX()) && (entity.getY() == getY());
     }
 }
