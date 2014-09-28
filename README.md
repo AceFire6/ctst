@@ -1,7 +1,7 @@
 # Climbing Towers, Stealing Treasure
 
-## Jethro Muller
-## MLLJET001
+<h3>Jethro Muller<br>
+MLLJET001</h3>
 
 ### Description
 
@@ -21,20 +21,20 @@ See [here](jethromuller.co.za/projects/game-development/second-year/ctst/) for m
 
 #### Artist Attributions:
 
-[Submerged](http://freemusicarchive.org/music/Edward_Shallow/Dodecaheadroom/Edward_Shallow_-_Dodecaheadroom_-_03_Submerged) by [Edward Shallow](http://freemusicarchive.org/music/Edward_Shallow/)  
+[Submerged](http://freemusicarchive.org/music/Edward_Shallow/Dodecaheadroom/Edward_Shallow_-_Dodecaheadroom_-_03_Submerged) by [Edward Shallow](http://freemusicarchive.org/music/Edward_Shallow/)
 Under CC BY-NC-SA license [creativecommons.org/licenses/by-nc-sa/3.0/us/](http://creativecommons.org/licenses/by-nc-sa/3.0/us/)
 
-[Breaking In](http://freemusicarchive.org/music/BoxCat_Games/Nameless_the_Hackers_RPG_Soundtrack/BoxCat_Games_-_Nameless-_the_Hackers_RPG_Soundtrack_-_01_Breaking_In) by [BoxCat Games](http://freemusicarchive.org/music/BoxCat_Games/)  
+[Breaking In](http://freemusicarchive.org/music/BoxCat_Games/Nameless_the_Hackers_RPG_Soundtrack/BoxCat_Games_-_Nameless-_the_Hackers_RPG_Soundtrack_-_01_Breaking_In) by [BoxCat Games](http://freemusicarchive.org/music/BoxCat_Games/)
 Under CC BY license [creativecommons.org/licenses/by/3.0/](http://creativecommons.org/licenses/by/3.0/)
 
-[OHC3](http://freemusicarchive.org/music/Kris_Keyser/Kris_Keyser/8bp130-04-kris_keyser-ohc3) by [Kris Keyser](http://freemusicarchive.org/music/Kris_Keyser/Kris_Keyser/)  
+[OHC3](http://freemusicarchive.org/music/Kris_Keyser/Kris_Keyser/8bp130-04-kris_keyser-ohc3) by [Kris Keyser](http://freemusicarchive.org/music/Kris_Keyser/Kris_Keyser/)
 Under CC BY-NC-ND license [creativecommons.org/licenses/by-nc-nd/3.0/](http://creativecommons.org/licenses/by-nc-nd/3.0/)
 
-[Sea Battles in Space](http://freemusicarchive.org/music/RoccoW/~/RoccoW_-_Sea_Battles_in_Space) by [RoccoW](http://freemusicarchive.org/music/RoccoW/)  
+[Sea Battles in Space](http://freemusicarchive.org/music/RoccoW/~/RoccoW_-_Sea_Battles_in_Space) by [RoccoW](http://freemusicarchive.org/music/RoccoW/)
 Under CC BY-NC-SA license [creativecommons.org/licenses/by-nc-sa/4.0/](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-[Fuckaboing](http://freemusicarchive.org/music/RoccoW/~/RoccoW_-_Fuckaboing) by [RoccoW](http://freemusicarchive.org/music/RoccoW/)  
+[Fuckaboing](http://freemusicarchive.org/music/RoccoW/~/RoccoW_-_Fuckaboing) by [RoccoW](http://freemusicarchive.org/music/RoccoW/)
 Under CC BY-SA license [creativecommons.org/licenses/by-sa/4.0/](http://creativecommons.org/licenses/by-sa/4.0/)
 
-[Enthalpy](http://freemusicarchive.org/music/Rolemusic/~/03_rolemusic_-_enthalpy) by [Rolemusic](http://freemusicarchive.org/music/Rolemusic/)  
+[Enthalpy](http://freemusicarchive.org/music/Rolemusic/~/03_rolemusic_-_enthalpy) by [Rolemusic](http://freemusicarchive.org/music/Rolemusic/)
 Under CC BY license [creativecommons.org/licenses/by/4.0/](http://creativecommons.org/licenses/by/4.0/)
