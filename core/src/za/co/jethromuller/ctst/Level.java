@@ -23,6 +23,7 @@ import za.co.jethromuller.ctst.entities.Entity;
 import za.co.jethromuller.ctst.entities.Player;
 import za.co.jethromuller.ctst.menus.GameOverScreen;
 import za.co.jethromuller.ctst.menus.PauseMenu;
+import za.co.jethromuller.ctst.menus.ScoreScreen;
 
 import java.util.ArrayList;
 
@@ -321,6 +322,10 @@ public class Level implements Screen {
 
     public void lose() {
         game.setScreen(new GameOverScreen(game, this));
+    }
+
+    public void win() {
+        game.setScreen(new ScoreScreen(game, this));
     }
 
     public String getLevelName() {
