@@ -42,6 +42,7 @@ public class Enemy extends Entity {
         if (Intersector.overlaps(player.getCircleBounds(), visionRange) &&
             !currentLevel.inShadow(player)) {
             speed = 0.9F;
+            visionRadius = 180;
             if (getX() < player.getX()) {
                 deltaX = speed;
             } else if (getX() > player.getX()) {
@@ -55,7 +56,8 @@ public class Enemy extends Entity {
             }
         } else {
             speed = 0.6F;
-            if ((System.currentTimeMillis() - pastTime) > (randTime.nextInt(2000) + 1000)) {
+            visionRadius = 80;
+            if ((System.currentTimeMillis() - pastTime) > (randTime.nextInt(2000) + 2000)) {
                 Random randSign = new Random();
                 Random randFloat = new Random();
                 deltaX = randFloat.nextFloat();
