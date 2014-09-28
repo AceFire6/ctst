@@ -3,23 +3,19 @@ package za.co.jethromuller.ctst.menus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import za.co.jethromuller.ctst.CtstGame;
-import za.co.jethromuller.ctst.Entity;
 import za.co.jethromuller.ctst.Level;
-import za.co.jethromuller.ctst.Player;
+import za.co.jethromuller.ctst.entities.Entity;
+import za.co.jethromuller.ctst.entities.Player;
 
 public class MainMenu implements Screen {
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private Texture menu;
-    private Music backgroundMusic;
-    private Sound selectSound;
     private CtstGame game;
 
     private int option = 0;
@@ -28,16 +24,12 @@ public class MainMenu implements Screen {
     public MainMenu(CtstGame game) {
         super();
         this.game = game;
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/ringdingharo.ogg"));
-        backgroundMusic.setVolume(0.5f);
-        selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
 
         shapeRenderer = game.getShapeRenderer();
         batch = game.getBatch();
 
         menu = new Texture(Gdx.files.internal("main_menu.png"));
-        backgroundMusic.setLooping(true);
-        backgroundMusic.play();
+        game.musicController.startMenuMusic();
     }
 
     @Override
@@ -47,10 +39,10 @@ public class MainMenu implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             option = (option > 0 ? option - 1: option);
-            selectSound.play();
+            game.musicController.playSelectSound();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             option = (option < 3 ? option + 1: option);
-            selectSound.play();
+            game.musicController.playSelectSound();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (option) {
                 case 0:
@@ -65,10 +57,10 @@ public class MainMenu implements Screen {
                     game.setScreen(level1);
                     break;
                 case 1:
-                    game.setScreen(new SaveSelect(game, backgroundMusic, selectSound, this));
+                    game.setScreen(new SaveSelect(game, this));
                     break;
                 case 2:
-                    selectSound.play(1F, 0.25F, 0F);
+                    game.musicController.playSelectSound(1F, 0.25F, 0F);
                     break;
                 case 3:
                     Gdx.app.exit();
@@ -91,12 +83,12 @@ public class MainMenu implements Screen {
 
     @Override
     public void show() {
-        backgroundMusic.play();
+
     }
 
     @Override
     public void hide() {
-        backgroundMusic.pause();
+
     }
 
     @Override
@@ -114,6 +106,5 @@ public class MainMenu implements Screen {
         batch.dispose();
         shapeRenderer.dispose();
         menu.dispose();
-        backgroundMusic.dispose();
     }
 }

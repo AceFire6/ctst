@@ -3,7 +3,6 @@ package za.co.jethromuller.ctst.menus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,9 +16,7 @@ public class PauseMenu implements Screen {
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
 
-    private Music backgroundMusic;
     private CtstGame game;
-    private MainMenu menu;
     private Texture pauseMenu;
 
     private Sound selectSound;
@@ -28,9 +25,8 @@ public class PauseMenu implements Screen {
     private int[] yCoords = {275, 235};
     private Level currentLevel;
 
-    public PauseMenu(CtstGame game, Music backgroundMusic, Level currentLevel) {
+    public PauseMenu(CtstGame game, Level currentLevel) {
         super();
-        this.backgroundMusic = backgroundMusic;
         this.game = game;
         shapeRenderer = game.getShapeRenderer();
         batch = game.getBatch();
@@ -79,12 +75,12 @@ public class PauseMenu implements Screen {
 
     @Override
     public void show() {
-        backgroundMusic.play();
+
     }
 
     @Override
     public void hide() {
-        backgroundMusic.pause();
+
     }
 
     @Override

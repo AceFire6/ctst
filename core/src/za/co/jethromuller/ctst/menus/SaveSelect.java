@@ -4,8 +4,6 @@ package za.co.jethromuller.ctst.menus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,27 +14,21 @@ public class SaveSelect implements Screen {
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
 
-    private Music backgroundMusic;
     private CtstGame game;
     private MainMenu menu;
     private Texture selectScreen;
 
-    private Sound selectSound;
-
     private int option = 0;
     private int[] yCoords = {277, 202, 133, 63};
 
-    public SaveSelect(CtstGame game, Music backgroundMusic, Sound selectSound, MainMenu menu) {
+    public SaveSelect(CtstGame game, MainMenu menu) {
         super();
-        this.backgroundMusic = backgroundMusic;
         this.game = game;
         shapeRenderer = game.getShapeRenderer();
         batch = game.getBatch();
 
         this.menu = menu;
         selectScreen = new Texture(Gdx.files.internal ("save_select.png"));
-
-        this.selectSound = selectSound;
     }
 
     @Override
@@ -46,20 +38,20 @@ public class SaveSelect implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             option = (option > 0 ? option - 1: option);
-            selectSound.play();
+            game.musicController.playSelectSound();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             option = (option < 3 ? option + 1: option);
-            selectSound.play();
+            game.musicController.playSelectSound();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (option) {
                 case 0:
-                    selectSound.play(1F, 0.25F, 0F);
+                    game.musicController.playSelectSound(1F, 0.25F, 0F);
                     break;
                 case 1:
-                    selectSound.play(1F, 0.25F, 0F);
+                    game.musicController.playSelectSound(1F, 0.25F, 0F);
                     break;
                 case 2:
-                    selectSound.play(1F, 0.25F, 0F);
+                    game.musicController.playSelectSound(1F, 0.25F, 0F);
                     break;
                 case 3:
                     game.setScreen(menu);
@@ -91,12 +83,12 @@ public class SaveSelect implements Screen {
 
     @Override
     public void show() {
-        backgroundMusic.play();
+
     }
 
     @Override
     public void hide() {
-        backgroundMusic.pause();
+
     }
 
     @Override
