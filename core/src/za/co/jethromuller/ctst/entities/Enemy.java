@@ -21,10 +21,12 @@ public class Enemy extends Entity {
     private float deltaY = 0;
     private float speed = 0.8F;
 
+    private boolean seen;
+
     private Random randTime;
 
     public Enemy(Level level, float x, float y) {
-        super(level, x, y, "entities/enemy/enemy.png");
+        super(level, x, y, "entities/enemy/enemy_down.png");
         visionRange = new Circle(x + visionRadius, y + visionRadius, visionRadius);
         hearingRange = new Circle(x + hearingRadius, y + hearingRadius, hearingRadius);
         pastTime = 0;
@@ -41,6 +43,10 @@ public class Enemy extends Entity {
 
         if (Intersector.overlaps(player.getCircleBounds(), visionRange) &&
             !currentLevel.inShadow(player)) {
+            if (!seen) {
+                currentLevel.seePlayer();
+                seen = true;
+            }
             speed = 0.9F;
             visionRadius = 180;
             if (getX() < player.getX()) {
@@ -55,6 +61,7 @@ public class Enemy extends Entity {
                 deltaY = -speed;
             }
         } else {
+            seen = false;
             speed = 0.6F;
             visionRadius = 80;
             if ((System.currentTimeMillis() - pastTime) > (randTime.nextInt(2000) + 2000)) {

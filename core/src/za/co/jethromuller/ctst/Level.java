@@ -55,6 +55,16 @@ public class Level implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     private ShapeRenderer shapeRenderer;
 
+    private long startTime;
+    private long endTime;
+
+    private int timesSeen = 0;
+    private int baseScore = 500;
+    private double finalScore;
+
+    private Rectangle staircase;
+
+
     public Level(CtstGame game, String level) {
         super();
         this.game = game;
@@ -98,7 +108,12 @@ public class Level implements Screen {
     public void addMapObjects(Object obj) {
         if (obj instanceof Array<?>) {
             for (Object mapObject : ((Array) obj)) {
-                addMapObject(mapObject);
+                if (mapObject instanceof RectangleMapObject && ((RectangleMapObject) mapObject)
+                        .getName().equals("staircase")) {
+                    staircase = ((RectangleMapObject) mapObject).getRectangle();
+                } else {
+                    addMapObject(mapObject);
+                }
             }
         }
     }
@@ -126,6 +141,24 @@ public class Level implements Screen {
     public void lightsOff() {
         gameMap.getLayers().get("gameMapLight").setVisible(false);
         lightsOff = true;
+    }
+
+    public Rectangle getStaircase() {
+        return staircase;
+    }
+
+    public void seePlayer() {
+        timesSeen += 1;
+    }
+
+    public String getStealthy() {
+        if (timesSeen == 0) {
+            return "Godly Sneakmeister Deluxe";
+        } else if (timesSeen < 5) {
+            return "Corvo would be proud";
+        } else {
+            return "No, it hurts to see you try";
+        }
     }
 
     private int[] getGridCoords(Object entity) {
@@ -176,9 +209,9 @@ public class Level implements Screen {
     }
 
     public void updatePositionInGrid(Entity entity) {
-        for (int i = 0; i < mapGrid.length; i++) {
+        for (Array<Object>[] aMapGrid : mapGrid) {
             for (int j = 0; j < mapGrid[0].length; j++) {
-                mapGrid[i][j].removeValue(entity, false);
+                aMapGrid[j].removeValue(entity, false);
             }
         }
 
@@ -325,7 +358,21 @@ public class Level implements Screen {
     }
 
     public void win() {
+        endTime = System.currentTimeMillis();
+        calculateScore();
         game.setScreen(new ScoreScreen(game, this));
+    }
+
+    private void calculateScore() {
+        finalScore = (baseScore - (50 * timesSeen))/ (getTime() / 5);
+    }
+
+    public double getScore() {
+        return finalScore;
+    }
+
+    public double getTime() {
+        return (endTime - startTime) / 1000;
     }
 
     public String getLevelName() {
@@ -340,6 +387,7 @@ public class Level implements Screen {
     @Override
     public void show() {
         game.musicController.startGameMusic();
+        startTime = System.currentTimeMillis();
     }
 
     @Override

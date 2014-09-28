@@ -42,6 +42,7 @@
   <object name="fire" x="68" y="307" width="25" height="24">
    <ellipse/>
   </object>
+  <object name="staircase" x="304" y="339" width="51" height="39"/>
  </objectgroup>
  <objectgroup name="entities" width="20" height="20" visible="0">
   <object name="Enemy" x="41" y="221" width="18" height="18"/>

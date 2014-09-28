@@ -21,11 +21,12 @@ public class MusicController {
         String musicPath = "music/*.ogg";
         for (int i = 0; i < songs.length; i++) {
             songs[i] = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", songNames[i])));
+            songs[i].setVolume(0);
             songs[i].setOnCompletionListener(onCompletionListener);
         }
 
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", menuMusicName)));
-        menuMusic.setVolume(0.6F);
+        menuMusic.setVolume(0.0F);
         menuMusic.setLooping(true);
 
         selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
@@ -36,7 +37,7 @@ public class MusicController {
         public void onCompletion(Music music) {
             currentSelection = ((currentSelection + 1) % songNames.length);
             songs[currentSelection].play();
-            songs[currentSelection].setVolume(0.5f);
+            songs[currentSelection].setVolume(0.0f);
         }
     };
 

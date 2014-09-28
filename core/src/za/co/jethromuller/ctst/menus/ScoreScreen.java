@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import za.co.jethromuller.ctst.CtstGame;
@@ -22,6 +23,9 @@ public class ScoreScreen implements Screen {
     private int[] yCoords = {84, 50};
     private Level currentLevel;
 
+    private BitmapFont font;
+
+
     public ScoreScreen(CtstGame game, Level currentLevel) {
         super();
         this.game = game;
@@ -29,6 +33,7 @@ public class ScoreScreen implements Screen {
         batch = game.getBatch();
         scoreScreen = new Texture(Gdx.files.internal ("score_screen.png"));
         this.currentLevel = currentLevel;
+        font = new BitmapFont();
     }
 
     @Override
@@ -55,6 +60,10 @@ public class ScoreScreen implements Screen {
 
         batch.begin();
         batch.draw(scoreScreen, 0, 0);
+        font.setScale(1.2F);
+        font.draw(batch, String.valueOf(((int) currentLevel.getScore())), 170, 295);
+        font.draw(batch, String.valueOf(currentLevel.getTime()), 170, 254);
+        font.draw(batch, currentLevel.getStealthy(), 170, 210);
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);

@@ -37,7 +37,7 @@ public class Player extends Entity {
      * @param y           The y coordinate of the player entity.
      */
     public Player(Level level, float x, float y) {
-        super(level, x, y, "entities/player_down.png");
+        super(level, x, y, "entities/player/player_down.png");
         radius = (getWidth() / 2);
         circleBounds = new Circle();
         circleBounds.set(x + radius, y + radius, radius);
@@ -107,6 +107,11 @@ public class Player extends Entity {
      */
     protected void collisionDetection(float newX, float newY) {
         Circle newCircle = new Circle(newX + radius, newY + radius, radius);
+
+        if (Intersector.overlaps(newCircle, currentLevel.getStaircase())) {
+            currentLevel.win();
+            return;
+        }
 
         if (Intersector.overlaps(newCircle, currentLevel.getLightSource())) {
             return;
