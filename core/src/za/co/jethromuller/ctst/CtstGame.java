@@ -15,6 +15,7 @@ public class CtstGame extends Game {
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private OrthographicCamera camera;
+    public MusicController musicController;
 
     @Override
     public void create () {
@@ -28,6 +29,8 @@ public class CtstGame extends Game {
 
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
+
+        musicController = new MusicController();
 
         this.setScreen(new MainMenu(this));
     }

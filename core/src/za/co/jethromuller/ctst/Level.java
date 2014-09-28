@@ -4,7 +4,6 @@ package za.co.jethromuller.ctst;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,6 +19,8 @@ import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import za.co.jethromuller.ctst.entities.Entity;
+import za.co.jethromuller.ctst.entities.Player;
 import za.co.jethromuller.ctst.menus.PauseMenu;
 
 import java.util.ArrayList;
@@ -48,14 +49,11 @@ public class Level implements Screen {
     private SpriteBatch batch;
     private OrthogonalTiledMapRenderer mapRenderer;
     private ShapeRenderer shapeRenderer;
-    private Music backgroundMusic;
 
     public Level(CtstGame game, String level, OrthographicCamera camera) {
         super();
         this.game = game;
         this.batch = game.getBatch();
-
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/ringdingharo.ogg"));
 
         gameMap = new TmxMapLoader().load(levelPath.replace("*", level));
         obstacles = gameMap.getLayers().get("obstacles").getObjects().getByType(RectangleMapObject
@@ -162,7 +160,7 @@ public class Level implements Screen {
             entity.draw(batch);
             if (drawBounds) {
                 if (entity instanceof Player) {
-                    Circle circle = ((Player) entity).circleBounds;
+                    Circle circle = ((Player) entity).getCircleBounds();
                     shapeRenderer.circle(circle.x, circle.y, circle.radius);
                 } else {
                     shapeRenderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
@@ -217,7 +215,7 @@ public class Level implements Screen {
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new PauseMenu(game, backgroundMusic, this));
+            game.setScreen(new PauseMenu(game, this));
         }
 
         //Drawing
@@ -247,12 +245,12 @@ public class Level implements Screen {
 
     @Override
     public void show() {
-        backgroundMusic.play();
+        game.musicController.startGameMusic();
     }
 
     @Override
     public void hide() {
-        backgroundMusic.pause();
+        game.musicController.pauseGameMusic();
     }
 
     @Override
