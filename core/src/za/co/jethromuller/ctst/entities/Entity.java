@@ -1,4 +1,4 @@
-package za.co.jethromuller.ctst;
+package za.co.jethromuller.ctst.entities;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import za.co.jethromuller.ctst.Level;
 
 /**
  * A level entity that requires collision detection.

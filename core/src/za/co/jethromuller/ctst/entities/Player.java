@@ -1,4 +1,4 @@
-package za.co.jethromuller.ctst;
+package za.co.jethromuller.ctst.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
+import za.co.jethromuller.ctst.Level;
 
 /**
  * The player class is the entity that the player controls.
@@ -13,7 +14,7 @@ import com.badlogic.gdx.math.Intersector;
 public class Player extends Entity {
 
     private float radius;
-    protected Circle circleBounds;
+    private Circle circleBounds;
     private boolean sneaking;
 
     //ALLLLL the textures
@@ -126,5 +127,9 @@ public class Player extends Entity {
         setPosition(newX, newY);
         circleBounds.setPosition(newX + circleBounds.radius, newY + circleBounds.radius);
 
+    }
+
+    public Circle getCircleBounds() {
+        return circleBounds;
     }
 }
