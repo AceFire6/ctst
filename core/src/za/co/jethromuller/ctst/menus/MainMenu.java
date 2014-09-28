@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import za.co.jethromuller.ctst.CtstGame;
 import za.co.jethromuller.ctst.Level;
-import za.co.jethromuller.ctst.entities.Entity;
-import za.co.jethromuller.ctst.entities.Player;
 
 public class MainMenu implements Screen {
     private SpriteBatch batch;
@@ -46,14 +44,7 @@ public class MainMenu implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (option) {
                 case 0:
-                    Level level1 = new Level(game, "level1", game.getCamera());
-
-                    Player player = new Player(level1, 200, 200, "entities/player_down.png");
-
-                    level1.addEntity(player);
-                    level1.addEntity(new Entity(level1, 50, 150, "entities/enemy.png"));
-                    level1.addEntity(new Entity(level1, 180, 50, "entities/enemy.png"));
-
+                    Level level1 = new Level(game, "level1");
                     game.setScreen(level1);
                     break;
                 case 1:
