@@ -1,7 +1,12 @@
 package za.co.jethromuller.ctst;
 
 
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -9,15 +14,17 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import za.co.jethromuller.ctst.menus.PauseMenu;
 
 import java.util.ArrayList;
 
-public class Level {
+public class Level implements Screen {
     /**
      * Grid of the various map positions with each
      * grid square holding the entities that intersect the
@@ -37,8 +44,19 @@ public class Level {
     private static int cellSize = 40;
     private boolean lightsOff;
 
+    private CtstGame game;
+    private SpriteBatch batch;
+    private OrthogonalTiledMapRenderer mapRenderer;
+    private ShapeRenderer shapeRenderer;
+    private Music backgroundMusic;
 
-    public Level(String level, Camera camera) {
+    public Level(CtstGame game, String level, OrthographicCamera camera) {
+        super();
+        this.game = game;
+        this.batch = game.getBatch();
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/ringdingharo.ogg"));
+
         gameMap = new TmxMapLoader().load(levelPath.replace("*", level));
         obstacles = gameMap.getLayers().get("obstacles").getObjects().getByType(RectangleMapObject
                                                                                                 .class);
@@ -65,6 +83,11 @@ public class Level {
                 mapGrid[i][j] = new Array<>();
             }
         }
+
+        mapRenderer = new OrthogonalTiledMapRenderer(gameMap);
+        mapRenderer.setView(camera);
+
+        shapeRenderer = game.getShapeRenderer();
     }
 
     public void lightsOn() {
@@ -189,5 +212,61 @@ public class Level {
             shapeRenderer.rect(rect.x, rect.y, rect.getWidth(), rect.getHeight());
         }
         shapeRenderer.circle(roomLight.x, roomLight.y, roomLight.radius);
+    }
+
+    @Override
+    public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new PauseMenu(game, backgroundMusic, this));
+        }
+
+        //Drawing
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        mapRenderer.render();
+
+        batch.begin();
+        // Draws the bounding boxes if the spacebar is pressed.
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(1, 1, 0, 1);
+            drawBounds(shapeRenderer);
+            drawEntities(true, batch, shapeRenderer);
+            shapeRenderer.end();
+        } else {
+            drawEntities(false, batch, shapeRenderer);
+        }
+        batch.end();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void show() {
+        backgroundMusic.play();
+    }
+
+    @Override
+    public void hide() {
+        backgroundMusic.pause();
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }
