@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -19,8 +18,10 @@ import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import za.co.jethromuller.ctst.entities.Enemy;
 import za.co.jethromuller.ctst.entities.Entity;
 import za.co.jethromuller.ctst.entities.Player;
+import za.co.jethromuller.ctst.menus.GameOverScreen;
 import za.co.jethromuller.ctst.menus.PauseMenu;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class Level implements Screen {
      * grid square holding the entities that intersect the
      * square's coordinates.
      */
-    private Array<Entity>[][] mapGrid;
+    private Array<Object>[][] mapGrid;
 
     private TiledMap gameMap;
 
@@ -41,7 +42,10 @@ public class Level implements Screen {
 
     private Array<Entity> entities;
 
+    private Player player;
+
     private static String levelPath = "levels/*/*.tmx";
+    private String levelName;
     private static int cellSize = 40;
     private boolean lightsOff;
 
@@ -50,14 +54,29 @@ public class Level implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     private ShapeRenderer shapeRenderer;
 
-    public Level(CtstGame game, String level, OrthographicCamera camera) {
+    public Level(CtstGame game, String level) {
         super();
         this.game = game;
         this.batch = game.getBatch();
 
+        levelName = level;
+        entities = new Array<>();
+        cellSize = ((int) (game.getCamera().viewportHeight / 10));
+        int gridRows = (int) game.getCamera().viewportHeight / cellSize;
+        int gridCols = (int) game.getCamera().viewportWidth / cellSize;
+
+        mapGrid = new Array[gridRows + 2][gridCols + 2];
+        for (int i = 0; i < mapGrid.length; i++) {
+            for (int j = 0; j < mapGrid[0].length; j++) {
+                mapGrid[i][j] = new Array<>();
+            }
+        }
+
         gameMap = new TmxMapLoader().load(levelPath.replace("*", level));
+        placeEntities();
         obstacles = gameMap.getLayers().get("obstacles").getObjects().getByType(RectangleMapObject
                                                                                                 .class);
+        addMapObjects(obstacles);
 
         Ellipse ellipse = ((EllipseMapObject) gameMap.getLayers().get("obstacles").getObjects().get
                 ("fire")).getEllipse();
@@ -69,23 +88,33 @@ public class Level implements Screen {
         lightsOff = false;
         levelPath = levelPath.replace("*", level);
 
-        entities = new Array<>();
-
-        cellSize = ((int) (camera.viewportHeight / 10));
-        int gridRows = (int) camera.viewportHeight / cellSize;
-        int gridCols = (int) camera.viewportWidth / cellSize;
-
-        mapGrid = new Array[gridRows + 2][gridCols + 2];
-        for (int i = 0; i < mapGrid.length; i++) {
-            for (int j = 0; j < mapGrid[0].length; j++) {
-                mapGrid[i][j] = new Array<>();
-            }
-        }
-
         mapRenderer = new OrthogonalTiledMapRenderer(gameMap);
-        mapRenderer.setView(camera);
+        mapRenderer.setView(game.getCamera());
 
         shapeRenderer = game.getShapeRenderer();
+    }
+
+    public void addMapObjects(Object obj) {
+        if (obj instanceof Array<?>) {
+            for (Object mapObject : ((Array) obj)) {
+                addMapObject(mapObject);
+            }
+        }
+    }
+
+    public void placeEntities() {
+        Array<RectangleMapObject> entities = gameMap.getLayers().get("entities").getObjects()
+                .getByType(RectangleMapObject.class);
+
+        for (RectangleMapObject entity : entities) {
+            Rectangle entityRect = entity.getRectangle();
+            if (entity.getName().equals("Player")) {
+                player = new Player(this, entityRect.getX(), entityRect.getY());
+                addMapObject(player);
+            } else {
+                addMapObject(new Enemy(this, entityRect.getX(), entityRect.getY()));
+            }
+        }
     }
 
     public void lightsOn() {
@@ -98,12 +127,27 @@ public class Level implements Screen {
         lightsOff = true;
     }
 
-    private int[] getGridCoords(Entity entity) {
-        int topLeftX = ((int) (entity.getX() / cellSize));
-        int topLeftY = ((int) (entity.getY() / cellSize));
+    private int[] getGridCoords(Object entity) {
+        int topLeftX = 0;
+        int topLeftY = 0;
+        int bottomRightX = 0;
+        int bottomRightY = 0;
+        if (entity instanceof Entity) {
+            topLeftX = ((int) (((Entity) entity).getX() / cellSize));
+            topLeftY = ((int) (((Entity) entity).getY() / cellSize));
 
-        int bottomRightX = ((int) ((entity.getX() + entity.getWidth()) / cellSize));
-        int bottomRightY = ((int) ((entity.getY() + entity.getHeight()) / cellSize));
+            bottomRightX = ((int) ((((Entity) entity).getX() + ((Entity) entity).getWidth()) /
+                                       cellSize));
+            bottomRightY = ((int) ((((Entity) entity).getY() + ((Entity) entity).getHeight()) /
+                                cellSize));
+        } else if (entity instanceof RectangleMapObject) {
+            Rectangle rect = ((RectangleMapObject) entity).getRectangle();
+            topLeftX = ((int) (rect.getX() / cellSize));
+            topLeftY = ((int) (rect.getY() / cellSize));
+
+            bottomRightX = ((int) ((rect.getX() + rect.getWidth()) / cellSize));
+            bottomRightY = ((int) ((rect.getY() + rect.getHeight()) / cellSize));
+        }
 
         return new int[] {topLeftY, bottomRightY, topLeftX, bottomRightX};
     }
@@ -113,8 +157,10 @@ public class Level implements Screen {
      * mapGrid in the correct cells.
      * @param entity The entity to be added.
      */
-    public void addEntity(Entity entity) {
-        entities.add(entity);
+    public void addMapObject(Object entity) {
+        if (entity instanceof Entity) {
+            entities.add(((Entity) entity));
+        }
         if (!(entity instanceof Player)) {
             int[] coords = getGridCoords(entity);
 
@@ -122,6 +168,24 @@ public class Level implements Screen {
                 for (int j = coords[2]; j <= coords[3]; j++) {
                     mapGrid[i][j].add(entity);
                 }
+            }
+        } else {
+            player = ((Player) entity);
+        }
+    }
+
+    public void updatePositionInGrid(Entity entity) {
+        for (int i = 0; i < mapGrid.length; i++) {
+            for (int j = 0; j < mapGrid[0].length; j++) {
+                mapGrid[i][j].removeValue(entity, false);
+            }
+        }
+
+        int[] coords = getGridCoords(entity);
+
+        for (int i = coords[0]; i <= coords[1]; i++) {
+            for (int j = coords[2]; j <= coords[3]; j++) {
+                mapGrid[i][j].add(entity);
             }
         }
     }
@@ -132,8 +196,8 @@ public class Level implements Screen {
      * @param entity    The entity that will cause collisions.
      * @return  ArrayList of entities that could be collided with.
      */
-    public ArrayList<Entity> getEntities(Entity entity, float newX, float newY) {
-        ArrayList<Entity> possibleEntities = new ArrayList<>();
+    public ArrayList<Object> getEntities(Entity entity, float newX, float newY) {
+        ArrayList<Object> possibleEntities = new ArrayList<>();
         int topLeftX = ((int) (newX / cellSize));
         int topLeftY = ((int) (newY / cellSize));
 
@@ -142,7 +206,7 @@ public class Level implements Screen {
 
         for (int i = topLeftY; i <= bottomRightY; i++) {
             for (int j = topLeftX; j <= bottomRightX; j++) {
-                for (Entity possibleEntity : mapGrid[i][j]) {
+                for (Object possibleEntity : mapGrid[i][j]) {
                     possibleEntities.add(possibleEntity);
                 }
             }
@@ -162,6 +226,12 @@ public class Level implements Screen {
                 if (entity instanceof Player) {
                     Circle circle = ((Player) entity).getCircleBounds();
                     shapeRenderer.circle(circle.x, circle.y, circle.radius);
+                } else if (entity instanceof Enemy) {
+                    Enemy enemy = (Enemy) entity;
+                    shapeRenderer.circle(enemy.visionRange.x, enemy.visionRange.y,
+                                         enemy.visionRange.radius);
+                    shapeRenderer.circle(enemy.hearingRange.x, enemy.hearingRange.y,
+                                         enemy.hearingRange.radius);
                 } else {
                     shapeRenderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
                 }
@@ -176,9 +246,9 @@ public class Level implements Screen {
             for (PolygonMapObject shadow : shadows) {
                 Polygon shadowPolygon = shadow.getPolygon();
                 float x1 = player.getBoundingRectangle().getX();
-                float x2 = x1 + player.getBoundingRectangle().getWidth()/2;
+                float x2 = x1 + player.getBoundingRectangle().getWidth();
                 float y1 = player.getBoundingRectangle().getY();
-                float y2 = x1 + player.getBoundingRectangle().getHeight()/2;
+                float y2 = y1 + player.getBoundingRectangle().getHeight();
 
                 for (float y = y1; y < y2; y++) {
                     for (float x = x1; x < x2; x++) {
@@ -190,6 +260,12 @@ public class Level implements Screen {
             }
         }
         return false;
+    }
+
+    public void drawShadows() {
+        for (PolygonMapObject shadow : shadows) {
+            shapeRenderer.polygon(shadow.getPolygon().getTransformedVertices());
+        }
     }
 
     public Array<RectangleMapObject> getObstacles() {
@@ -204,7 +280,7 @@ public class Level implements Screen {
         return roomLight;
     }
 
-    public void drawBounds(ShapeRenderer shapeRenderer) {
+    public void drawBounds() {
         for (RectangleMapObject rectangleMapObject : getObstacles()) {
             Rectangle rect = rectangleMapObject.getRectangle();
             shapeRenderer.rect(rect.x, rect.y, rect.getWidth(), rect.getHeight());
@@ -229,13 +305,26 @@ public class Level implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(1, 1, 0, 1);
-            drawBounds(shapeRenderer);
+            drawBounds();
+            drawShadows();
             drawEntities(true, batch, shapeRenderer);
             shapeRenderer.end();
         } else {
             drawEntities(false, batch, shapeRenderer);
         }
         batch.end();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void lose() {
+        game.setScreen(new GameOverScreen(game, this));
+    }
+
+    public String getLevelName() {
+        return levelName;
     }
 
     @Override
