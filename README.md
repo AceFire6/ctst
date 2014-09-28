@@ -1,7 +1,7 @@
 # Climbing Towers, Stealing Treasure
 
-## Jethro Muller
-## MLLJET001
+<h3>Jethro Muller<br>
+MLLJET001</h3>
 
 ### Description
 
