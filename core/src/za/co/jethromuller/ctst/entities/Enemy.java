@@ -24,7 +24,7 @@ public class Enemy extends Entity {
     private Random randTime;
 
     public Enemy(Level level, float x, float y) {
-        super(level, x, y, "entities/enemy.png");
+        super(level, x, y, "entities/enemy/enemy.png");
         visionRange = new Circle(x + visionRadius, y + visionRadius, visionRadius);
         hearingRange = new Circle(x + hearingRadius, y + hearingRadius, hearingRadius);
         pastTime = 0;
