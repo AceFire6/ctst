@@ -218,6 +218,9 @@ public class Level implements Screen {
         }
     }
 
+    /**
+     * Removes the given entity from any future collisions.
+     */
     public void killEntity(Entity entity) {
         removeEntity(entity);
         entities.removeValue(entity, false);
@@ -231,6 +234,10 @@ public class Level implements Screen {
         }
     }
 
+    /**
+     * Recalculates the entities position in the mapGrid.
+     * @param entity
+     */
     public void updatePositionInGrid(Entity entity) {
         removeEntity(entity);
         int[] coords = getGridCoords(entity);
