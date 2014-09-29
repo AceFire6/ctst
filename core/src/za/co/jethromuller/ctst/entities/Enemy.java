@@ -27,8 +27,8 @@ public class Enemy extends Entity {
 
     public Enemy(Level level, float x, float y) {
         super(level, x, y, "entities/enemy/enemy_down.png");
-        visionRange = new Circle(x + visionRadius, y + visionRadius, visionRadius);
-        hearingRange = new Circle(x + hearingRadius, y + hearingRadius, hearingRadius);
+        visionRange = new Circle(x + xOffset, y + yOffset, visionRadius);
+        hearingRange = new Circle(x + xOffset, y + yOffset, hearingRadius);
         pastTime = 0;
         randTime = new Random();
     }
@@ -41,25 +41,17 @@ public class Enemy extends Entity {
             currentLevel.lose();
         }
 
-        if (Intersector.overlaps(player.getCircleBounds(), visionRange) &&
-            !currentLevel.inShadow(player)) {
+        if ((Intersector.overlaps(player.getCircleBounds(), visionRange) && !currentLevel.inShadow(player)) ||
+            (player.isMoving() && !player.isSneaking() && Intersector.overlaps(hearingRange, player.getNoiseMarker()))) {
             if (!seen) {
                 currentLevel.seePlayer();
                 seen = true;
             }
-            speed = 1F;
+            speed = 0.8F;
             visionRadius = 190;
-            if (getX() < player.getX()) {
-                deltaX = speed;
-            } else if (getX() > player.getX()) {
-                deltaX = -speed;
-            }
 
-            if (getY() < player.getY()) {
-                deltaY = speed;
-            } else if (getY() > player.getY()) {
-                deltaY = -speed;
-            }
+            deltaX = (getX() < player.getX()) ? speed: -speed;
+            deltaY = (getY() < player.getY()) ? speed: -speed;
         } else {
             seen = false;
             speed = 0.6F;
@@ -91,6 +83,12 @@ public class Enemy extends Entity {
             } else {
                 setTexture(currentLevel.getGame().enemyTextureController.getDown());
             }
+        } else {
+            if (deltaX > 0) {
+                setTexture(currentLevel.getGame().enemyTextureController.getRight());
+            } else if (deltaX < 0) {
+                setTexture(currentLevel.getGame().enemyTextureController.getLeft());
+            }
         }
 
         if (deltaX != 0 || deltaY != 0) {
@@ -107,8 +105,8 @@ public class Enemy extends Entity {
      */
     protected void collisionDetection(float newX, float newY) {
         super.collisionDetection(newX, newY);
-        visionRange.set(getX(), getY(), visionRadius);
-        hearingRange.set(getX(), getY(), hearingRadius);
+        visionRange.setPosition(getX() + xOffset, getY() + yOffset);
+        hearingRange.setPosition(getX() + xOffset, getY() + yOffset);
     }
 
     @Override

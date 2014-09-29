@@ -15,7 +15,6 @@ public class MainMenu implements Screen {
     private ShapeRenderer shapeRenderer;
     private Texture menu;
     private CtstGame game;
-
     private int option = 0;
     private int[] yCoords = {224, 180, 140, 98};
 

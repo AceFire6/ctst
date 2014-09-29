@@ -18,6 +18,11 @@ public class Player extends Entity {
     private Circle circleBounds;
     private boolean sneaking;
 
+    private Circle noiseMarker;
+    private int noiseRadius = 60;
+
+    private boolean moving;
+
     //ALLLLL the textures
     private Texture up = new Texture("entities/player/player_up.png");
     private Texture down = new Texture("entities/player/player_down.png");
@@ -39,9 +44,10 @@ public class Player extends Entity {
     public Player(Level level, float x, float y) {
         super(level, x, y, "entities/player/player_down.png");
         radius = (getWidth() / 2);
-        circleBounds = new Circle();
-        circleBounds.set(x + radius, y + radius, radius);
+        circleBounds = new Circle(x + radius, y + radius, radius);
+        noiseMarker = new Circle(x + radius, y + radius, noiseRadius);
         sneaking = false;
+        moving = false;
     }
 
     /**
@@ -66,16 +72,15 @@ public class Player extends Entity {
         if(Gdx.input.isKeyPressed(Keys.UP)) {
             this.setTexture(up);
             deltaY = speed;
-        }
-        if(Gdx.input.isKeyPressed(Keys.DOWN)) {
+        } else if(Gdx.input.isKeyPressed(Keys.DOWN)) {
             this.setTexture(down);
             deltaY = -speed;
         }
+
         if(Gdx.input.isKeyPressed(Keys.LEFT)) {
             this.setTexture(left);
             deltaX = -speed;
-        }
-        if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+        } else if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
             this.setTexture(right);
             deltaX = speed;
         }
@@ -85,18 +90,24 @@ public class Player extends Entity {
                 setTexture(upRight);
             } else if (deltaX < 0) {
                 setTexture(upLeft);
+            } else {
+                setTexture(up);
             }
         } else if (deltaY < 0) {
             if (deltaX > 0) {
                 setTexture(downRight);
             } else if (deltaX < 0) {
                 setTexture(downLeft);
+            } else {
+                setTexture(down);
             }
         }
 
         if (deltaX != 0 || deltaY != 0) {
             collisionDetection(getX() + deltaX, getY());
             collisionDetection(getX(), getY() + deltaY);
+        } else {
+            moving = false;
         }
     }
 
@@ -122,28 +133,43 @@ public class Player extends Entity {
                 Treasure treasure = (Treasure) entity;
                 if (Intersector.overlaps(newCircle, treasure.getBoundingRectangle())) {
                     currentLevel.addScore(treasure.collect());
-                    System.out.println(currentLevel.getScore());
+                    moving = false;
                     return;
                 }
             } else if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (Intersector.overlaps(newCircle, ent.getBoundingRectangle())) {
+                    moving = false;
                     return;
                 }
             } else if (entity instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) entity).getRectangle();
                 if (Intersector.overlaps(newCircle, rect)) {
+                    moving = false;
                     return;
                 }
             }
         }
 
         setPosition(newX, newY);
-        circleBounds.setPosition(newX + circleBounds.radius, newY + circleBounds.radius);
+        moving = true;
+        circleBounds.setPosition(newX + xOffset, newY + yOffset);
+        noiseMarker.setPosition(newX + xOffset, newY + yOffset);
+    }
 
+    public boolean isMoving() {
+        return moving;
     }
 
     public Circle getCircleBounds() {
         return circleBounds;
+    }
+
+    public Circle getNoiseMarker() {
+        return noiseMarker;
+    }
+
+    public boolean isSneaking() {
+        return sneaking;
     }
 }

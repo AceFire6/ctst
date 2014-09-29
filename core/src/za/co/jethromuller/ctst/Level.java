@@ -4,6 +4,7 @@ package za.co.jethromuller.ctst;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -46,7 +47,7 @@ public class Level implements Screen {
 
     private Player player;
 
-    private static String levelPath = "levels/*/*.tmx";
+    private String levelPath = "levels/*/*.tmx";
     private String levelName;
     private static int cellSize = 40;
     private boolean lightsOff;
@@ -88,6 +89,8 @@ public class Level implements Screen {
         placeEntities();
         obstacles = gameMap.getLayers().get("obstacles").getObjects().getByType(RectangleMapObject
                                                                                                 .class);
+
+        System.out.println(obstacles.size);
         addMapObjects(obstacles);
 
         Ellipse ellipse = ((EllipseMapObject) gameMap.getLayers().get("obstacles").getObjects().get
@@ -265,25 +268,27 @@ public class Level implements Screen {
 
     /**
      * Draws all the entities.
-     * @param drawBounds    boolean indicating whether or not to draw the bounding boxes.
      */
-    public void drawEntities(boolean drawBounds, SpriteBatch batch, ShapeRenderer shapeRenderer) {
+    public void drawEntities() {
         for (Entity entity : entities) {
             entity.update();
             entity.draw(batch);
-            if (drawBounds) {
-                if (entity instanceof Player) {
-                    Circle circle = ((Player) entity).getCircleBounds();
-                    shapeRenderer.circle(circle.x, circle.y, circle.radius);
-                } else if (entity instanceof Enemy) {
-                    Enemy enemy = (Enemy) entity;
-                    shapeRenderer.circle(enemy.visionRange.x, enemy.visionRange.y,
-                                         enemy.visionRange.radius);
-                    shapeRenderer.circle(enemy.hearingRange.x, enemy.hearingRange.y,
-                                         enemy.hearingRange.radius);
-                } else {
-                    shapeRenderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
-                }
+        }
+    }
+
+    public void drawEntityBounds() {
+        for (Entity entity : entities) {
+            if (entity instanceof Player) {
+                Circle circle = ((Player) entity).getCircleBounds();
+                Circle circleNoise = ((Player) entity).getNoiseMarker();
+                shapeRenderer.circle(circle.x, circle.y, circle.radius);
+                shapeRenderer.circle(circleNoise.x, circleNoise.y, circleNoise.radius);
+            } else if (entity instanceof Enemy) {
+                Enemy enemy = (Enemy) entity;
+                shapeRenderer.circle(enemy.visionRange.x, enemy.visionRange.y, enemy.visionRange.radius);
+                shapeRenderer.circle(enemy.hearingRange.x, enemy.hearingRange.y, enemy.hearingRange.radius);
+            } else {
+                shapeRenderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
             }
         }
     }
@@ -321,15 +326,11 @@ public class Level implements Screen {
         return obstacles;
     }
 
-    public TiledMap getGameMap() {
-        return gameMap;
-    }
-
     public Circle getLightSource() {
         return roomLight;
     }
 
-    public void drawBounds() {
+    public void drawMapObstaclesBounds() {
         for (RectangleMapObject rectangleMapObject : getObstacles()) {
             Rectangle rect = rectangleMapObject.getRectangle();
             shapeRenderer.rect(rect.x, rect.y, rect.getWidth(), rect.getHeight());
@@ -350,18 +351,23 @@ public class Level implements Screen {
         mapRenderer.render();
 
         batch.begin();
-        // Draws the bounding boxes if the spacebar is pressed.
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(1, 1, 0, 1);
-            drawBounds();
-            drawShadows();
-            drawEntities(true, batch, shapeRenderer);
-            shapeRenderer.end();
-        } else {
-            drawEntities(false, batch, shapeRenderer);
-        }
+        drawEntities();
         batch.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        if (player.isMoving() && !player.isSneaking()) {
+            Circle noiseMarker = player.getNoiseMarker();
+            shapeRenderer.setColor(Color.LIGHT_GRAY);
+            shapeRenderer.circle(noiseMarker.x, noiseMarker.y, noiseMarker.radius);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            shapeRenderer.setColor(1, 1, 0, 1);
+            drawMapObstaclesBounds();
+            drawShadows();
+            drawEntityBounds();
+        }
+        shapeRenderer.end();
     }
 
     public Player getPlayer() {

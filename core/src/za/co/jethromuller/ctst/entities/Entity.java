@@ -17,6 +17,9 @@ public class Entity extends Sprite {
     protected FileHandle current_file;
     protected Level currentLevel;
 
+    protected float xOffset = getWidth()/2;
+    protected float yOffset = getHeight()/2;
+
     /**
      * Creates a new Entity with the given parameters.
      * @param level        The level that is making the entity.

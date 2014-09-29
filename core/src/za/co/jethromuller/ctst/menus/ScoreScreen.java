@@ -50,7 +50,8 @@ public class ScoreScreen implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (option) {
                 case 0:
-                    game.setScreen(currentLevel);
+                    Level level2 = new Level(game, "level2");
+                    game.setScreen(level2);
                     break;
                 case 1:
                     game.setScreen(new MainMenu(game));
