@@ -47,7 +47,7 @@ public class Enemy extends Entity {
                 currentLevel.seePlayer();
                 seen = true;
             }
-            speed = 0.9F;
+            speed = 1.1F;
             visionRadius = 180;
             if (getX() < player.getX()) {
                 deltaX = speed;
@@ -72,6 +72,24 @@ public class Enemy extends Entity {
                 deltaY = randFloat.nextFloat();
                 deltaY = randSign.nextBoolean() ? -deltaY: deltaY;
                 pastTime = System.currentTimeMillis();
+            }
+        }
+
+        if (deltaY > 0) {
+            if (deltaX > 0) {
+                setTexture(currentLevel.getGame().enemyTextureController.getUpRight());
+            } else if (deltaX < 0) {
+                setTexture(currentLevel.getGame().enemyTextureController.getUpLeft());
+            } else {
+                setTexture(currentLevel.getGame().enemyTextureController.getUp());
+            }
+        } else if (deltaY < 0) {
+            if (deltaX > 0) {
+                setTexture(currentLevel.getGame().enemyTextureController.getDownRight());
+            } else if (deltaX < 0) {
+                setTexture(currentLevel.getGame().enemyTextureController.getDownLeft());
+            } else {
+                setTexture(currentLevel.getGame().enemyTextureController.getDown());
             }
         }
 

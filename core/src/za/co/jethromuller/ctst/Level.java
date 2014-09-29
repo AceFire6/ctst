@@ -379,6 +379,10 @@ public class Level implements Screen {
         return levelName;
     }
 
+    public CtstGame getGame() {
+        return game;
+    }
+
     @Override
     public void resize(int width, int height) {
 

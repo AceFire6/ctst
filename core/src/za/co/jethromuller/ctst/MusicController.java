@@ -10,7 +10,6 @@ public class MusicController {
     private Music[] songs;
     private Music menuMusic;
     private Sound selectSound;
-    private final String menuMusicName = "Breaking_In";
     private final String[] songNames = {"Enthalpy", "Fuckaboing", "OHC3", "Sea_Battles_in_Space",
                                         "Submerged"};
     private int currentSelection = 0;
@@ -21,25 +20,24 @@ public class MusicController {
         String musicPath = "music/*.ogg";
         for (int i = 0; i < songs.length; i++) {
             songs[i] = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", songNames[i])));
-            songs[i].setVolume(0);
+            OnCompletionListener onCompletionListener = new OnCompletionListener() {
+                @Override
+                public void onCompletion(Music music) {
+                    currentSelection = ((currentSelection + 1) % songNames.length);
+                    songs[currentSelection].play();
+                    songs[currentSelection].setVolume(0.5f);
+                }
+            };
             songs[i].setOnCompletionListener(onCompletionListener);
         }
 
+        String menuMusicName = "Breaking_In";
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", menuMusicName)));
-        menuMusic.setVolume(0.0F);
+        menuMusic.setVolume(0.6F);
         menuMusic.setLooping(true);
 
         selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
     }
-
-    private OnCompletionListener onCompletionListener = new OnCompletionListener() {
-        @Override
-        public void onCompletion(Music music) {
-            currentSelection = ((currentSelection + 1) % songNames.length);
-            songs[currentSelection].play();
-            songs[currentSelection].setVolume(0.0f);
-        }
-    };
 
     public void startGameMusic() {
         stopMenuMusic();

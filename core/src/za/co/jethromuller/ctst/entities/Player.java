@@ -19,16 +19,16 @@ public class Player extends Entity {
     private boolean sneaking;
 
     //ALLLLL the textures
-    Texture up = new Texture("entities/player/player_up.png");
-    Texture down = new Texture("entities/player/player_down.png");
-    Texture left = new Texture("entities/player/player_left.png");
-    Texture right = new Texture("entities/player/player_right.png");
+    private Texture up = new Texture("entities/player/player_up.png");
+    private Texture down = new Texture("entities/player/player_down.png");
+    private Texture left = new Texture("entities/player/player_left.png");
+    private Texture right = new Texture("entities/player/player_right.png");
 
-    Texture upLeft = new Texture("entities/player/player_up_left.png");
-    Texture upRight = new Texture("entities/player/player_up_right.png");
+    private Texture upLeft = new Texture("entities/player/player_up_left.png");
+    private Texture upRight = new Texture("entities/player/player_up_right.png");
 
-    Texture downLeft = new Texture("entities/player/player_down_left.png");
-    Texture downRight = new Texture("entities/player/player_down_right.png");
+    private Texture downLeft = new Texture("entities/player/player_down_left.png");
+    private Texture downRight = new Texture("entities/player/player_down_right.png");
 
     /**
      * Creates a player object with the given parameters.
