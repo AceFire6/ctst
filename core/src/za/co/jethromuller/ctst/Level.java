@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import za.co.jethromuller.ctst.entities.Enemy;
 import za.co.jethromuller.ctst.entities.Entity;
 import za.co.jethromuller.ctst.entities.Player;
+import za.co.jethromuller.ctst.entities.Treasure;
 import za.co.jethromuller.ctst.menus.GameOverScreen;
 import za.co.jethromuller.ctst.menus.PauseMenu;
 import za.co.jethromuller.ctst.menus.ScoreScreen;
@@ -127,8 +128,10 @@ public class Level implements Screen {
             if (entity.getName().equals("Player")) {
                 player = new Player(this, entityRect.getX(), entityRect.getY());
                 addMapObject(player);
-            } else {
+            } else if (entity.getName().equals("Enemy")) {
                 addMapObject(new Enemy(this, entityRect.getX(), entityRect.getY()));
+            } else {
+                addMapObject(new Treasure(this, entityRect.getX(), entityRect.getY()));
             }
         }
     }
@@ -141,6 +144,10 @@ public class Level implements Screen {
     public void lightsOff() {
         gameMap.getLayers().get("gameMapLight").setVisible(false);
         lightsOff = true;
+    }
+
+    public void addScore(int score) {
+        finalScore += score;
     }
 
     public Rectangle getStaircase() {
@@ -208,13 +215,21 @@ public class Level implements Screen {
         }
     }
 
-    public void updatePositionInGrid(Entity entity) {
+    public void killEntity(Entity entity) {
+        removeEntity(entity);
+        entities.removeValue(entity, false);
+    }
+
+    public void removeEntity(Entity entity) {
         for (Array<Object>[] aMapGrid : mapGrid) {
             for (int j = 0; j < mapGrid[0].length; j++) {
                 aMapGrid[j].removeValue(entity, false);
             }
         }
+    }
 
+    public void updatePositionInGrid(Entity entity) {
+        removeEntity(entity);
         int[] coords = getGridCoords(entity);
 
         for (int i = coords[0]; i <= coords[1]; i++) {
@@ -364,7 +379,7 @@ public class Level implements Screen {
     }
 
     private void calculateScore() {
-        finalScore = (baseScore - (50 * timesSeen))/ (getTime() / 5);
+        finalScore += (baseScore - (5 * timesSeen))/ (getTime() / 16);
     }
 
     public double getScore() {

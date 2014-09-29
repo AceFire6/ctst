@@ -47,8 +47,8 @@ public class Enemy extends Entity {
                 currentLevel.seePlayer();
                 seen = true;
             }
-            speed = 1.1F;
-            visionRadius = 180;
+            speed = 1F;
+            visionRadius = 190;
             if (getX() < player.getX()) {
                 deltaX = speed;
             } else if (getX() > player.getX()) {

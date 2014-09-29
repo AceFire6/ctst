@@ -118,7 +118,14 @@ public class Player extends Entity {
         }
 
         for (Object entity : currentLevel.getEntities(this, newX, newY)) {
-            if (entity instanceof Entity) {
+            if (entity instanceof Treasure) {
+                Treasure treasure = (Treasure) entity;
+                if (Intersector.overlaps(newCircle, treasure.getBoundingRectangle())) {
+                    currentLevel.addScore(treasure.collect());
+                    System.out.println(currentLevel.getScore());
+                    return;
+                }
+            } else if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (Intersector.overlaps(newCircle, ent.getBoundingRectangle())) {
                     return;

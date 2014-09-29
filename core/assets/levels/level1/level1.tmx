@@ -30,7 +30,7 @@
    <polygon points="0,0 101,0 102,60 -2,58"/>
   </object>
  </objectgroup>
- <objectgroup name="obstacles" width="20" height="20">
+ <objectgroup name="obstacles" width="20" height="20" visible="0">
   <object name="wall" x="21" y="61" width="281" height="18"/>
   <object name="wall" x="14" y="17" width="5" height="367"/>
   <object name="wall" x="17" y="380" width="369" height="6"/>
@@ -44,9 +44,10 @@
   </object>
   <object name="staircase" x="304" y="339" width="51" height="39"/>
  </objectgroup>
- <objectgroup name="entities" width="20" height="20" visible="0">
+ <objectgroup name="entities" width="20" height="20">
   <object name="Enemy" x="41" y="221" width="18" height="18"/>
   <object name="Enemy" x="120" y="261" width="20" height="20"/>
   <object name="Player" x="32" y="31" width="19" height="18"/>
+  <object name="Treasure" x="47" y="345"/>
  </objectgroup>
 </map>
