@@ -59,7 +59,6 @@ public class Level implements Screen {
     private long endTime;
 
     private int timesSeen = 0;
-    private int baseScore = 500;
     private double finalScore;
 
     private Rectangle staircase;
@@ -165,6 +164,8 @@ public class Level implements Screen {
             return "Godly Sneakmeister Deluxe";
         } else if (timesSeen < 5) {
             return "Corvo would be proud";
+        } else if (getScore() == 0) {
+            return "You have failed this city";
         } else {
             return "No, it hurts to see you try";
         }
@@ -416,7 +417,9 @@ public class Level implements Screen {
     }
 
     private void calculateScore() {
-        finalScore += (baseScore - (5 * timesSeen))/ (getTime() / 16);
+        int baseScore = 1000;
+        double score = (baseScore - (25 * timesSeen) - (getTime() * 10));
+        finalScore += ((score >= 0 ? score : 0));
     }
 
     public double getScore() {
