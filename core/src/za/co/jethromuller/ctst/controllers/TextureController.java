@@ -1,4 +1,4 @@
-package za.co.jethromuller.ctst;
+package za.co.jethromuller.ctst.controllers;
 
 
 import com.badlogic.gdx.graphics.Texture;
