@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import za.co.jethromuller.ctst.entities.EnemyTextureController;
 import za.co.jethromuller.ctst.menus.MainMenu;
 
 /**
@@ -17,7 +16,7 @@ public class CtstGame extends Game {
     private ShapeRenderer shapeRenderer;
     private OrthographicCamera camera;
     public MusicController musicController;
-    public EnemyTextureController enemyTextureController;
+    public TextureController textureController;
 
     @Override
     public void create () {
@@ -33,7 +32,7 @@ public class CtstGame extends Game {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
         musicController = new MusicController();
-        enemyTextureController = new EnemyTextureController();
+        textureController = new TextureController();
 
         this.setScreen(new MainMenu(this));
     }

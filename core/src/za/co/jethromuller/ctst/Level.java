@@ -4,7 +4,6 @@ package za.co.jethromuller.ctst;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,10 +18,7 @@ import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import za.co.jethromuller.ctst.entities.Enemy;
-import za.co.jethromuller.ctst.entities.Entity;
-import za.co.jethromuller.ctst.entities.Player;
-import za.co.jethromuller.ctst.entities.Treasure;
+import za.co.jethromuller.ctst.entities.*;
 import za.co.jethromuller.ctst.menus.GameOverScreen;
 import za.co.jethromuller.ctst.menus.PauseMenu;
 import za.co.jethromuller.ctst.menus.ScoreScreen;
@@ -363,9 +359,8 @@ public class Level implements Screen {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         if (player.isMoving() && !player.isSneaking()) {
-            Circle noiseMarker = player.getNoiseMarker();
-            shapeRenderer.setColor(Color.LIGHT_GRAY);
-            shapeRenderer.circle(noiseMarker.x, noiseMarker.y, noiseMarker.radius);
+            addMapObject(new VfxEntity(this, player.getX(), player.getY(),
+                                       "vfx/sound_ripple/0.png", 6, 0.125F));
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {

@@ -2,7 +2,6 @@ package za.co.jethromuller.ctst.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
@@ -22,18 +21,6 @@ public class Player extends Entity {
     private int noiseRadius = 60;
 
     private boolean moving;
-
-    //ALLLLL the textures
-    private Texture up = new Texture("entities/player/player_up.png");
-    private Texture down = new Texture("entities/player/player_down.png");
-    private Texture left = new Texture("entities/player/player_left.png");
-    private Texture right = new Texture("entities/player/player_right.png");
-
-    private Texture upLeft = new Texture("entities/player/player_up_left.png");
-    private Texture upRight = new Texture("entities/player/player_up_right.png");
-
-    private Texture downLeft = new Texture("entities/player/player_down_left.png");
-    private Texture downRight = new Texture("entities/player/player_down_right.png");
 
     /**
      * Creates a player object with the given parameters.
@@ -70,36 +57,36 @@ public class Player extends Entity {
         }
 
         if(Gdx.input.isKeyPressed(Keys.UP)) {
-            this.setTexture(up);
+            this.setTexture(currentLevel.getGame().textureController.getPlayer_up());
             deltaY = speed;
         } else if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-            this.setTexture(down);
+            this.setTexture(currentLevel.getGame().textureController.getPlayer_down());
             deltaY = -speed;
         }
 
         if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-            this.setTexture(left);
+            this.setTexture(currentLevel.getGame().textureController.getPlayer_left());
             deltaX = -speed;
         } else if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            this.setTexture(right);
+            this.setTexture(currentLevel.getGame().textureController.getPlayer_right());
             deltaX = speed;
         }
 
         if (deltaY > 0) {
             if (deltaX > 0) {
-                setTexture(upRight);
+                setTexture(currentLevel.getGame().textureController.getPlayer_upRight());
             } else if (deltaX < 0) {
-                setTexture(upLeft);
+                setTexture(currentLevel.getGame().textureController.getPlayer_upLeft());
             } else {
-                setTexture(up);
+                setTexture(currentLevel.getGame().textureController.getPlayer_up());
             }
         } else if (deltaY < 0) {
             if (deltaX > 0) {
-                setTexture(downRight);
+                setTexture(currentLevel.getGame().textureController.getPlayer_downRight());
             } else if (deltaX < 0) {
-                setTexture(downLeft);
+                setTexture(currentLevel.getGame().textureController.getPlayer_downLeft());
             } else {
-                setTexture(down);
+                setTexture(currentLevel.getGame().textureController.getPlayer_down());
             }
         }
 

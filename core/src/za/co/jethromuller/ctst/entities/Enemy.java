@@ -31,6 +31,8 @@ public class Enemy extends Entity {
         hearingRange = new Circle(x + xOffset, y + yOffset, hearingRadius);
         pastTime = 0;
         randTime = new Random();
+
+        setCollidable(true);
     }
 
     @Override
@@ -69,25 +71,25 @@ public class Enemy extends Entity {
 
         if (deltaY > 0) {
             if (deltaX > 0) {
-                setTexture(currentLevel.getGame().enemyTextureController.getUpRight());
+                setTexture(currentLevel.getGame().textureController.getEnemy_upRight());
             } else if (deltaX < 0) {
-                setTexture(currentLevel.getGame().enemyTextureController.getUpLeft());
+                setTexture(currentLevel.getGame().textureController.getEnemy_upLeft());
             } else {
-                setTexture(currentLevel.getGame().enemyTextureController.getUp());
+                setTexture(currentLevel.getGame().textureController.getEnemy_up());
             }
         } else if (deltaY < 0) {
             if (deltaX > 0) {
-                setTexture(currentLevel.getGame().enemyTextureController.getDownRight());
+                setTexture(currentLevel.getGame().textureController.getEnemy_downRight());
             } else if (deltaX < 0) {
-                setTexture(currentLevel.getGame().enemyTextureController.getDownLeft());
+                setTexture(currentLevel.getGame().textureController.getEnemy_downLeft());
             } else {
-                setTexture(currentLevel.getGame().enemyTextureController.getDown());
+                setTexture(currentLevel.getGame().textureController.getEnemy_down());
             }
         } else {
             if (deltaX > 0) {
-                setTexture(currentLevel.getGame().enemyTextureController.getRight());
+                setTexture(currentLevel.getGame().textureController.getEnemy_right());
             } else if (deltaX < 0) {
-                setTexture(currentLevel.getGame().enemyTextureController.getLeft());
+                setTexture(currentLevel.getGame().textureController.getEnemy_left());
             }
         }
 

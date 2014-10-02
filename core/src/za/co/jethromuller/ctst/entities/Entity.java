@@ -1,5 +1,6 @@
 package za.co.jethromuller.ctst.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,6 +17,8 @@ public class Entity extends Sprite {
 
     protected FileHandle current_file;
     protected Level currentLevel;
+
+    protected boolean collidable;
 
     protected float xOffset = getWidth()/2;
     protected float yOffset = getHeight()/2;
@@ -40,7 +43,7 @@ public class Entity extends Sprite {
 
     public void setCurrentFile(String filePath) {
         setTexture(new Texture(filePath));
-        current_file = new FileHandle(filePath);
+        current_file = Gdx.files.internal(filePath);
     }
 
     /**
@@ -89,5 +92,18 @@ public class Entity extends Sprite {
         Entity entity = (Entity) obj;
 
         return (entity.getX() == getX()) && (entity.getY() == getY());
+    }
+
+    public void setCollidable(boolean collide) {
+        collidable = collide;
+    }
+
+    public boolean isCollidable() {
+        return collidable;
+    }
+
+    protected void dispose() {
+        currentLevel.killEntity(this);
+        this.getTexture().dispose();
     }
 }
