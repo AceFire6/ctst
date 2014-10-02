@@ -54,6 +54,7 @@ public class Enemy extends Entity {
                 seen = true;
             }
             visionRadius = 190;
+            speed = 1.1F;
 
             deltaX = (getX() < player.getX()) ? speed: -speed;
             deltaY = (getY() < player.getY()) ? speed: -speed;
@@ -113,7 +114,7 @@ public class Enemy extends Entity {
      */
     protected void collisionDetection(float newX, float newY) {
         super.collisionDetection(newX, newY);
-        visionRange.setPosition(getX() + xOffset, getY() + yOffset);
+        visionRange.set(getX() + xOffset, getY() + yOffset, visionRadius);
         hearingRange.setPosition(getX() + xOffset, getY() + yOffset);
     }
 
