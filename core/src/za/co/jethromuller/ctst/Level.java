@@ -95,6 +95,8 @@ public class Level implements Screen {
                 ("fire")).getEllipse();
         int radius = ((int) (ellipse.circumference() / 6));
         roomLight = new Circle(ellipse.x + radius, ellipse.y + radius, radius);
+        addAnimation(new VfxEntity(this, ellipse.x + 2, ellipse.y + 2, "vfx/fire/", 6, 0.5F,
+                                   false));
 
         shadows = gameMap.getLayers().get("shadows").getObjects().getByType(PolygonMapObject.class);
 
