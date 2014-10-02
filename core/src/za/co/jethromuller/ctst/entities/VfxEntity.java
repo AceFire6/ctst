@@ -10,13 +10,14 @@ public class VfxEntity extends Entity {
 
     private float stateTime;
     private Animation animation;
+    private boolean destroyOnComplete;
 
     public VfxEntity(Level level, float x, float y, String filePath, int steps, float timing,
                      boolean destroyOnCompletion) {
         super(level, x, y, filePath + "0.png");
-        animation = currentLevel.getGame().textureController.getAnimation("vfx/sound_ripple/",
-                                                                        steps, timing);
+        animation = currentLevel.getGame().textureController.getAnimation(filePath, steps, timing);
         stateTime = 0f;
+        destroyOnComplete = destroyOnCompletion;
         setCollidable(false);
     }
 
@@ -27,7 +28,12 @@ public class VfxEntity extends Entity {
 
     public TextureRegion getKeyframe() {
         if (animation.isAnimationFinished(stateTime)) {
-            this.dispose();
+            if (destroyOnComplete) {
+                this.dispose();
+            } else {
+                stateTime = Gdx.graphics.getDeltaTime();
+                return animation.getKeyFrame(stateTime, true);
+            }
         } else {
             stateTime += Gdx.graphics.getDeltaTime();
             return animation.getKeyFrame(stateTime, true);
