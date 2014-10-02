@@ -10,6 +10,8 @@ public class MusicController {
     private Music[] songs;
     private Music menuMusic;
     private Sound selectSound;
+    private Sound collectSound;
+    private Sound walkSound;
     private final String[] songNames = {"Enthalpy", "Fuckaboing", "OHC3", "Sea_Battles_in_Space",
                                         "Submerged"};
     private int currentSelection = 0;
@@ -25,7 +27,7 @@ public class MusicController {
                 public void onCompletion(Music music) {
                     currentSelection = ((currentSelection + 1) % songNames.length);
                     songs[currentSelection].play();
-                    songs[currentSelection].setVolume(0.5f);
+                    songs[currentSelection].setVolume(0.3f);
                 }
             };
             songs[i].setOnCompletionListener(onCompletionListener);
@@ -33,15 +35,18 @@ public class MusicController {
 
         String menuMusicName = "Breaking_In";
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", menuMusicName)));
-        menuMusic.setVolume(0.6F);
+        menuMusic.setVolume(0.2F);
         menuMusic.setLooping(true);
 
         selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
+        collectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/collect_treasure.ogg"));
+        walkSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/walk.wav"));
     }
 
     public void startGameMusic() {
         stopMenuMusic();
         songs[currentSelection].play();
+        songs[currentSelection].setVolume(0.3f);
     }
 
     public void pauseGameMusic() {
@@ -58,7 +63,15 @@ public class MusicController {
     }
 
     public void playSelectSound() {
-        selectSound.play();
+        selectSound.play(0.3F, 1F, 0F);
+    }
+
+    public void playCollectSound() {
+        collectSound.play();
+    }
+
+    public void playWalkSound(float volume, float pitch, float pan) {
+        walkSound.play(volume, pitch, pan);
     }
 
     public void playSelectSound(float volume, float pitch, float pan) {
