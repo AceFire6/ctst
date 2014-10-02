@@ -19,9 +19,9 @@ public class Enemy extends Entity {
 
     private float deltaX = 0;
     private float deltaY = 0;
-    private float speed = 0.8F;
 
     private boolean seen;
+    private Player player;
 
     private Random randTime;
 
@@ -37,7 +37,11 @@ public class Enemy extends Entity {
 
     @Override
     public void update() {
-        Player player = currentLevel.getPlayer();
+        if (player == null) {
+            player = currentLevel.getPlayer();
+        }
+
+        float speed = 0.9F;
 
         if (Intersector.overlaps(player.getCircleBounds(), getBoundingRectangle())) {
             currentLevel.lose();
@@ -49,14 +53,12 @@ public class Enemy extends Entity {
                 currentLevel.seePlayer();
                 seen = true;
             }
-            speed = 0.8F;
             visionRadius = 190;
 
             deltaX = (getX() < player.getX()) ? speed: -speed;
             deltaY = (getY() < player.getY()) ? speed: -speed;
         } else {
             seen = false;
-            speed = 0.6F;
             visionRadius = 80;
             if ((System.currentTimeMillis() - pastTime) > (randTime.nextInt(2000) + 2000)) {
                 Random randSign = new Random();
@@ -94,6 +96,10 @@ public class Enemy extends Entity {
         }
 
         if (deltaX != 0 || deltaY != 0) {
+            if ((Math.abs(deltaX) == speed) && (Math.abs(deltaY) == speed)) {
+                deltaX *= 0.725;
+                deltaY *= 0.725;
+            }
             collisionDetection(getX() + deltaX, getY());
             collisionDetection(getX(), getY() + deltaY);
             currentLevel.updatePositionInGrid(this);
