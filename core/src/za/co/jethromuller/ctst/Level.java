@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -40,6 +41,7 @@ public class Level implements Screen {
     private Array<PolygonMapObject> shadows;
 
     private Array<Entity> entities;
+    private Array<VfxEntity> animations;
 
     private Player player;
 
@@ -70,6 +72,7 @@ public class Level implements Screen {
 
         levelName = level;
         entities = new Array<>();
+        animations = new Array<>();
         cellSize = ((int) (game.getCamera().viewportHeight / 10));
         int gridRows = (int) game.getCamera().viewportHeight / cellSize;
         int gridCols = (int) game.getCamera().viewportWidth / cellSize;
@@ -218,8 +221,12 @@ public class Level implements Screen {
      * Removes the given entity from any future collisions.
      */
     public void killEntity(Entity entity) {
-        removeEntity(entity);
-        entities.removeValue(entity, false);
+        if (entity instanceof VfxEntity) {
+            animations.removeValue(((VfxEntity) entity), false);
+        } else {
+            removeEntity(entity);
+            entities.removeValue(entity, false);
+        }
     }
 
     public void removeEntity(Entity entity) {
@@ -276,6 +283,18 @@ public class Level implements Screen {
         for (Entity entity : entities) {
             entity.update();
             entity.draw(batch);
+        }
+    }
+
+    public void drawAnimations() {
+        for (VfxEntity animation : animations) {
+            animation.update();
+            TextureRegion animRegion = animation.getKeyframe();
+            if (animRegion != null) {
+                float x = animation.getX() - (animation.getWidth() / 2) + (player.getWidth() / 2);
+                float y = animation.getY() - (animation.getHeight() / 2) + (player.getHeight() / 2);
+                batch.draw(animRegion, x, y);
+            }
         }
     }
 
@@ -347,6 +366,16 @@ public class Level implements Screen {
             game.setScreen(new PauseMenu(game, this));
         }
 
+        if (player.isMoving() && !player.isSneaking() && player.isNoiseReady()) {
+            addAnimation(new VfxEntity(this, player.getX(), player.getY(), "vfx/sound_ripple/",
+                                       5, 0.15F, true));
+            game.musicController.playWalkSound(0.8F, 1F, 0F);
+            player.resetNoiseCounter();
+        } else if (player.isMoving() && player.isSneaking() && player.isNoiseReady()) {
+            game.musicController.playWalkSound(0.3F, 1F, 0F);
+            player.resetNoiseCounter();
+        }
+
         //Drawing
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -354,15 +383,11 @@ public class Level implements Screen {
         mapRenderer.render();
 
         batch.begin();
+        drawAnimations();
         drawEntities();
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        if (player.isMoving() && !player.isSneaking()) {
-            addMapObject(new VfxEntity(this, player.getX(), player.getY(),
-                                       "vfx/sound_ripple/0.png", 6, 0.125F));
-        }
-
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             shapeRenderer.setColor(1, 1, 0, 1);
             drawMapObstaclesBounds();
@@ -370,6 +395,10 @@ public class Level implements Screen {
             drawEntityBounds();
         }
         shapeRenderer.end();
+    }
+
+    public void addAnimation(VfxEntity vfxEntity) {
+        animations.add(vfxEntity);
     }
 
     public Player getPlayer() {

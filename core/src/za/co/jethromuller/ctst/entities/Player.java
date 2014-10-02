@@ -22,6 +22,8 @@ public class Player extends Entity {
 
     private boolean moving;
 
+    private float noiseCounter;
+
     /**
      * Creates a player object with the given parameters.
      * @param level        The level that created this entity.
@@ -35,6 +37,7 @@ public class Player extends Entity {
         noiseMarker = new Circle(x + radius, y + radius, noiseRadius);
         sneaking = false;
         moving = false;
+        noiseCounter = 0;
     }
 
     /**
@@ -42,6 +45,7 @@ public class Player extends Entity {
      */
     @Override
     public void update() {
+        noiseCounter += Gdx.graphics.getDeltaTime();
         float deltaX = 0;
         float deltaY = 0;
         int speed;
@@ -91,11 +95,23 @@ public class Player extends Entity {
         }
 
         if (deltaX != 0 || deltaY != 0) {
+            if ((Math.abs(deltaX) == speed) && (Math.abs(deltaY) == speed)) {
+                deltaX *= 0.725;
+                deltaY *= 0.725;
+            }
             collisionDetection(getX() + deltaX, getY());
             collisionDetection(getX(), getY() + deltaY);
         } else {
             moving = false;
         }
+    }
+
+    public boolean isNoiseReady() {
+        return (noiseCounter > 0.3);
+    }
+
+    public void resetNoiseCounter() {
+        noiseCounter = 0;
     }
 
     /**
@@ -120,19 +136,17 @@ public class Player extends Entity {
                 Treasure treasure = (Treasure) entity;
                 if (Intersector.overlaps(newCircle, treasure.getBoundingRectangle())) {
                     currentLevel.addScore(treasure.collect());
-                    moving = false;
+                    currentLevel.getGame().musicController.playCollectSound();
                     return;
                 }
             } else if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (Intersector.overlaps(newCircle, ent.getBoundingRectangle())) {
-                    moving = false;
                     return;
                 }
             } else if (entity instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) entity).getRectangle();
                 if (Intersector.overlaps(newCircle, rect)) {
-                    moving = false;
                     return;
                 }
             }
