@@ -56,8 +56,10 @@ public class Enemy extends Entity {
             visionRadius = 190;
             speed = 1.1F;
 
-            deltaX = (getX() < player.getX()) ? speed: -speed;
-            deltaY = (getY() < player.getY()) ? speed: -speed;
+            deltaX = (getX() < player.getX() - 10) ? speed: (getX() > player.getX() + 10) ?
+                                                           -speed: 0;
+            deltaY = (getY() < player.getY() - 10) ? speed: (getY() > player.getY() + 10) ?
+                                                           -speed: 0;
         } else {
             seen = false;
             visionRadius = 80;
@@ -72,27 +74,29 @@ public class Enemy extends Entity {
             }
         }
 
-        if (deltaY > 0) {
+        if (deltaY > 0) { // up
             if (deltaX > 0) {
                 setTexture(currentLevel.getGame().textureController.getEnemy_upRight());
-            } else if (deltaX < 0) {
-                setTexture(currentLevel.getGame().textureController.getEnemy_upLeft());
-            } else {
+            } else if (deltaX == 0) {
                 setTexture(currentLevel.getGame().textureController.getEnemy_up());
-            }
-        } else if (deltaY < 0) {
-            if (deltaX > 0) {
-                setTexture(currentLevel.getGame().textureController.getEnemy_downRight());
-            } else if (deltaX < 0) {
-                setTexture(currentLevel.getGame().textureController.getEnemy_downLeft());
             } else {
-                setTexture(currentLevel.getGame().textureController.getEnemy_down());
+                setTexture(currentLevel.getGame().textureController.getEnemy_upLeft());
             }
-        } else {
+        } else if  (deltaY == 0) {  // left or right
             if (deltaX > 0) {
                 setTexture(currentLevel.getGame().textureController.getEnemy_right());
-            } else if (deltaX < 0) {
+            } else if (deltaX == 0) {
+                return;
+            } else {
                 setTexture(currentLevel.getGame().textureController.getEnemy_left());
+            }
+        } else { // down
+            if (deltaX > 0) {
+                setTexture(currentLevel.getGame().textureController.getEnemy_downRight());
+            } else if (deltaX == 0) {
+                setTexture(currentLevel.getGame().textureController.getEnemy_down());
+            } else {
+                setTexture(currentLevel.getGame().textureController.getEnemy_downLeft());
             }
         }
 
