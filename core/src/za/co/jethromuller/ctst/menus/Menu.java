@@ -31,7 +31,7 @@ public class Menu implements Screen {
         shapeRenderer = game.getShapeRenderer();
         batch = game.getBatch();
 
-        menuTexture = new Texture(Gdx.files.internal(filePath));
+        menuTexture = new Texture(Gdx.files.internal("menus/" + filePath));
     }
 
     @Override
