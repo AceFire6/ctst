@@ -11,8 +11,10 @@ public class Enemy extends Entity {
 
     public Circle visionRange;
     public Circle hearingRange;
+    public Circle smellRange;
 
     private int visionRadius = 80;
+    private int smellRadius = 20;
     private int hearingRadius = 130;
 
     private long pastTime;
@@ -29,6 +31,8 @@ public class Enemy extends Entity {
         super(level, x, y, "entities/enemy/enemy_down.png");
         visionRange = new Circle(x + xOffset, y + yOffset, visionRadius);
         hearingRange = new Circle(x + xOffset, y + yOffset, hearingRadius);
+        smellRange = new Circle(x + xOffset, y + yOffset, smellRadius);
+
         pastTime = 0;
         randTime = new Random();
 
@@ -48,7 +52,8 @@ public class Enemy extends Entity {
         }
 
         if ((Intersector.overlaps(player.getCircleBounds(), visionRange) && !currentLevel.inShadow(player)) ||
-            (player.isMoving() && !player.isSneaking() && Intersector.overlaps(hearingRange, player.getNoiseMarker()))) {
+            (player.isMoving() && !player.isSneaking() && Intersector.overlaps(hearingRange, player.getNoiseMarker()))
+                || Intersector.overlaps(smellRange, player.getCircleBounds())) {
             if (!seen) {
                 currentLevel.seePlayer();
                 seen = true;
@@ -120,6 +125,7 @@ public class Enemy extends Entity {
         super.collisionDetection(newX, newY);
         visionRange.set(getX() + xOffset, getY() + yOffset, visionRadius);
         hearingRange.setPosition(getX() + xOffset, getY() + yOffset);
+        smellRange.setPosition(getX() + xOffset, getY() + yOffset);
     }
 
     @Override

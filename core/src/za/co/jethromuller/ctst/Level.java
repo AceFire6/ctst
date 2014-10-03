@@ -312,6 +312,7 @@ public class Level implements Screen {
                 Enemy enemy = (Enemy) entity;
                 shapeRenderer.circle(enemy.visionRange.x, enemy.visionRange.y, enemy.visionRange.radius);
                 shapeRenderer.circle(enemy.hearingRange.x, enemy.hearingRange.y, enemy.hearingRange.radius);
+                shapeRenderer.circle(enemy.smellRange.x, enemy.smellRange.y, enemy.smellRange.radius);
             } else {
                 shapeRenderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
             }
