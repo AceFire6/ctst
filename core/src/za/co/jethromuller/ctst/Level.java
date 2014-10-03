@@ -88,7 +88,6 @@ public class Level implements Screen {
         obstacles = gameMap.getLayers().get("obstacles").getObjects().getByType(RectangleMapObject
                                                                                                 .class);
 
-        System.out.println(obstacles.size);
         addMapObjects(obstacles);
 
         Ellipse ellipse = ((EllipseMapObject) gameMap.getLayers().get("obstacles").getObjects().get
