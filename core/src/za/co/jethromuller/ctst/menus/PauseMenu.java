@@ -27,7 +27,7 @@ public class PauseMenu extends Menu {
     }
 
     @Override
-    protected void additionalRender() {
+    protected void additionalBatchRender() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(currentLevel);
         }

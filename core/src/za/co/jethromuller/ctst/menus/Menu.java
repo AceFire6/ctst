@@ -44,10 +44,11 @@ public class Menu implements Screen {
 
         batch.begin();
         batch.draw(menuTexture, 0, 0);
-        additionalRender();
+        additionalBatchRender();
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        additionalShapeRender();
         shapeRenderer.setColor(1F, 0.23F, 0.23F, 1);
         shapeRenderer.circle(xCoord, yCoords[option], 10);
         shapeRenderer.end();
@@ -65,7 +66,11 @@ public class Menu implements Screen {
         }
     }
 
-    protected void additionalRender() {
+    protected void additionalBatchRender() {
+
+    }
+
+    protected void additionalShapeRender() {
 
     }
 

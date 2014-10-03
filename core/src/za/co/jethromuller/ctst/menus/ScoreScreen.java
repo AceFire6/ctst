@@ -31,7 +31,7 @@ public class ScoreScreen extends Menu {
     }
 
     @Override
-    public void additionalRender() {
+    public void additionalBatchRender() {
         font.setScale(1.2F);
         font.draw(batch, String.valueOf(((int) currentLevel.getScore())), 170, 295);
         font.draw(batch, String.valueOf(currentLevel.getTime()), 170, 254);

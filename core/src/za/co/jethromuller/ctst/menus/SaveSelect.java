@@ -33,7 +33,7 @@ public class SaveSelect extends Menu {
     }
 
     @Override
-    protected void additionalRender() {
+    protected void additionalBatchRender() {
         if (option == 3) {
             xCoord = 106;
         } else {

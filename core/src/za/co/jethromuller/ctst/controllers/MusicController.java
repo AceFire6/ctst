@@ -16,6 +16,15 @@ public class MusicController {
                                         "Submerged"};
     private int currentSelection = 0;
 
+    private int muteMusic = 1;
+    private int muteSound = 1;
+
+    private float musicVolume = 1F;
+    private float soundVolume = 1F;
+
+    private float songVolume = 0.3F;
+    private float menuVolume = 0.2F;
+
 
     public MusicController() {
         songs = new Music[songNames.length];
@@ -27,7 +36,7 @@ public class MusicController {
                 public void onCompletion(Music music) {
                     currentSelection = ((currentSelection + 1) % songNames.length);
                     songs[currentSelection].play();
-                    songs[currentSelection].setVolume(0.3f);
+                    songs[currentSelection].setVolume(songVolume * muteMusic * musicVolume);
                 }
             };
             songs[i].setOnCompletionListener(onCompletionListener);
@@ -35,7 +44,7 @@ public class MusicController {
 
         String menuMusicName = "Breaking_In";
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", menuMusicName)));
-        menuMusic.setVolume(0.2F);
+        menuMusic.setVolume(menuVolume * muteMusic * musicVolume);
         menuMusic.setLooping(true);
 
         selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
@@ -46,7 +55,7 @@ public class MusicController {
     public void startGameMusic() {
         stopMenuMusic();
         songs[currentSelection].play();
-        songs[currentSelection].setVolume(0.3f);
+        songs[currentSelection].setVolume(songVolume * muteMusic * musicVolume);
     }
 
     public void pauseGameMusic() {
@@ -56,6 +65,7 @@ public class MusicController {
     public void startMenuMusic() {
         pauseGameMusic();
         menuMusic.play();
+        menuMusic.setVolume(menuVolume * muteMusic * musicVolume);
     }
 
     public void stopMenuMusic() {
@@ -63,18 +73,57 @@ public class MusicController {
     }
 
     public void playSelectSound() {
-        selectSound.play(0.3F, 1F, 0F);
+        if (muteSound == 1) {
+            selectSound.play(1F * soundVolume);
+        }
     }
 
     public void playCollectSound() {
-        collectSound.play();
+        if (muteSound == 1) {
+            collectSound.play(1F * soundVolume);
+        }
     }
 
     public void playWalkSound(float volume, float pitch, float pan) {
-        walkSound.play(volume, pitch, pan);
+        if (muteSound == 1) {
+            walkSound.play(volume * soundVolume, pitch, pan);
+        }
     }
 
     public void playSelectSound(float volume, float pitch, float pan) {
-        selectSound.play(volume, pitch, pan);
+        if (muteSound == 1) {
+            selectSound.play(volume * soundVolume, pitch, pan);
+        }
+    }
+
+    public void muteMusic() {
+        muteMusic = ((muteMusic == 1) ? 0 : 1);
+        updateMusicVolumes();
+    }
+
+    public void muteSound() {
+        muteSound = ((muteSound == 1) ? 0 : 1);
+    }
+
+    public void setMusicVolume(float volOffset) {
+        musicVolume += volOffset;
+        updateMusicVolumes();
+    }
+
+    private void updateMusicVolumes() {
+        songs[currentSelection].setVolume(musicVolume * musicVolume * muteMusic);
+        menuMusic.setVolume(menuVolume * musicVolume * muteMusic);
+    }
+
+    public void setSoundVolume(float volOffset) {
+        soundVolume += volOffset;
+    }
+
+    public float getMusicVolume() {
+        return musicVolume;
+    }
+
+    public float getSoundVolume() {
+        return soundVolume;
     }
 }

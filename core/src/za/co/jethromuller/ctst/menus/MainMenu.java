@@ -25,7 +25,7 @@ public class MainMenu extends Menu {
                 game.setScreen(new SaveSelect(game, this));
                 break;
             case 2:
-                game.musicController.playSelectSound(0.4F, 0.25F, 0F);
+                game.setScreen(new OptionsMenu(game));
                 break;
             case 3:
                 Gdx.app.exit();
