@@ -241,7 +241,6 @@ public class Level implements Screen {
 
     /**
      * Recalculates the entities position in the mapGrid.
-     * @param entity
      */
     public void updatePositionInGrid(Entity entity) {
         removeEntity(entity);
