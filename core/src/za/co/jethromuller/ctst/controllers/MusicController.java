@@ -12,6 +12,8 @@ public class MusicController {
     private Sound selectSound;
     private Sound collectSound;
     private Sound walkSound;
+    private Sound deathSound;
+
     private final String[] songNames = {"Enthalpy", "Fuckaboing", "OHC3", "Sea_Battles_in_Space",
                                         "Submerged"};
     private int currentSelection = 0;
@@ -50,6 +52,7 @@ public class MusicController {
         selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
         collectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/collect_treasure.ogg"));
         walkSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/walk.wav"));
+        deathSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/player_death.ogg"));
     }
 
     public void startGameMusic() {
@@ -87,6 +90,12 @@ public class MusicController {
     public void playWalkSound(float volume, float pitch, float pan) {
         if (muteSound == 1) {
             walkSound.play(volume * soundVolume, pitch, pan);
+        }
+    }
+
+    public void playDeathSound(float volume, float pitch, float pan) {
+        if (muteSound == 1) {
+            deathSound.play(volume * soundVolume, pitch, pan);
         }
     }
 

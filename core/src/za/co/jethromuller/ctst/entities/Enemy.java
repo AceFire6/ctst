@@ -58,6 +58,7 @@ public class Enemy extends Entity {
         float speed = 0.9F;
 
         if (Intersector.overlaps(player.getCircleBounds(), getBoundingRectangle())) {
+            currentLevel.getGame().musicController.playDeathSound(1F, 1F, 0F);
             currentLevel.lose();
         }
 
