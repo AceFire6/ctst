@@ -65,7 +65,7 @@ public class Entity extends Sprite {
             return;
         }
 
-        for (Object entity : currentLevel.getEntities(this, newX, newY)) {
+        for (Object entity : currentLevel.getEntities(getWidth(), getHeight(), newX, newY)) {
             if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (!entity.equals(this)) {
@@ -80,8 +80,6 @@ public class Entity extends Sprite {
                 }
             }
         }
-
-
         setPosition(newX, newY);
     }
 

@@ -1,10 +1,14 @@
 package za.co.jethromuller.ctst.entities;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import za.co.jethromuller.ctst.Level;
+import za.co.jethromuller.ctst.pathfinding.Waypoint;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
 
 public class Enemy extends Entity {
@@ -14,7 +18,7 @@ public class Enemy extends Entity {
     public Circle smellRange;
 
     private int visionRadius = 80;
-    private int smellRadius = 20;
+    private int smellRadius = 15;
     private int hearingRadius = 130;
 
     private long pastTime;
@@ -27,6 +31,11 @@ public class Enemy extends Entity {
 
     private Random randTime;
 
+    private long waypointTimer;
+
+    private Queue<Waypoint> waypoints;
+    private Waypoint lastSeenPosition;
+
     public Enemy(Level level, float x, float y) {
         super(level, x, y, "entities/enemy/enemy_down.png");
         visionRange = new Circle(x + xOffset, y + yOffset, visionRadius);
@@ -37,6 +46,7 @@ public class Enemy extends Entity {
         randTime = new Random();
 
         setCollidable(true);
+        waypoints = new PriorityQueue<>();
     }
 
     @Override
@@ -61,10 +71,18 @@ public class Enemy extends Entity {
             visionRadius = 190;
             speed = 1.1F;
 
-            deltaX = (getX() < player.getX() - 10) ? speed: (getX() > player.getX() + 10) ?
-                                                           -speed: 0;
-            deltaY = (getY() < player.getY() - 10) ? speed: (getY() > player.getY() + 10) ?
-                                                           -speed: 0;
+            if ((waypointTimer % 0.1) == 0) {
+                moveTo(new Waypoint(player.getX(), player.getY()));
+            }
+
+            if (waypointTimer > 0.3) {
+                waypointTimer = 0;
+                lastSeenPosition = new Waypoint(player.getX(), player.getY());
+            } else {
+                waypointTimer += Gdx.graphics.getDeltaTime();
+            }
+        } else if (seen && (waypoints.size() != 0)) {
+            moveTo(lastSeenPosition);
         } else {
             seen = false;
             visionRadius = 80;
@@ -79,6 +97,34 @@ public class Enemy extends Entity {
             }
         }
 
+        setTexture();
+
+        if (deltaX != 0 || deltaY != 0) {
+            if ((Math.abs(deltaX) == speed) && (Math.abs(deltaY) == speed)) {
+                deltaX *= 0.725;
+                deltaY *= 0.725;
+            }
+            super.collisionDetection(getX() + deltaX, getY());
+            super.collisionDetection(getX(), getY() + deltaY);
+
+            visionRange.set(getX() + xOffset, getY() + yOffset, visionRadius);
+            hearingRange.setPosition(getX() + xOffset, getY() + yOffset);
+            smellRange.setPosition(getX() + xOffset, getY() + yOffset);
+
+            currentLevel.updatePositionInGrid(this);
+        }
+    }
+
+    private void moveTo(Waypoint waypoint) {
+        waypoints = currentLevel.pathFinder.getPath(waypoint);
+        System.out.println(waypoints);
+        System.out.println(waypoint);
+        float[] coords = waypoint.getAsComponents(getX(), getY());
+        deltaX = coords[0];
+        deltaY = coords[1];
+    }
+
+    public void setTexture() {
         if (deltaY > 0) { // up
             if (deltaX > 0) {
                 setTexture(currentLevel.getGame().textureController.getEnemy_upRight());
@@ -104,28 +150,6 @@ public class Enemy extends Entity {
                 setTexture(currentLevel.getGame().textureController.getEnemy_downLeft());
             }
         }
-
-        if (deltaX != 0 || deltaY != 0) {
-            if ((Math.abs(deltaX) == speed) && (Math.abs(deltaY) == speed)) {
-                deltaX *= 0.725;
-                deltaY *= 0.725;
-            }
-            collisionDetection(getX() + deltaX, getY());
-            collisionDetection(getX(), getY() + deltaY);
-            currentLevel.updatePositionInGrid(this);
-        }
-    }
-
-    /**
-     * Performs all collision tests given the new X and Y coordinates of the player.
-     * @param newX    New x coordinate of the player.
-     * @param newY    New y coordinate of the player.
-     */
-    protected void collisionDetection(float newX, float newY) {
-        super.collisionDetection(newX, newY);
-        visionRange.set(getX() + xOffset, getY() + yOffset, visionRadius);
-        hearingRange.setPosition(getX() + xOffset, getY() + yOffset);
-        smellRange.setPosition(getX() + xOffset, getY() + yOffset);
     }
 
     @Override

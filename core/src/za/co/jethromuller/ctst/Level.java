@@ -23,6 +23,8 @@ import za.co.jethromuller.ctst.entities.*;
 import za.co.jethromuller.ctst.menus.GameOverScreen;
 import za.co.jethromuller.ctst.menus.PauseMenu;
 import za.co.jethromuller.ctst.menus.ScoreScreen;
+import za.co.jethromuller.ctst.pathfinding.PathFinder;
+import za.co.jethromuller.ctst.pathfinding.Tile;
 
 import java.util.ArrayList;
 
@@ -47,7 +49,7 @@ public class Level implements Screen {
 
     private String levelPath = "levels/*/*.tmx";
     private String levelName;
-    private static int cellSize = 40;
+    private int cellSize;
     private boolean lightsOff;
 
     private CtstGame game;
@@ -63,6 +65,13 @@ public class Level implements Screen {
 
     private Rectangle staircase;
 
+    private Tile[][] tileMap;
+
+    private int gridRows;
+    private int gridCols;
+
+    public PathFinder pathFinder;
+
 
     public Level(CtstGame game, String level) {
         super();
@@ -73,8 +82,8 @@ public class Level implements Screen {
         entities = new Array<>();
         animations = new Array<>();
         cellSize = ((int) (game.getCamera().viewportHeight / 10));
-        int gridRows = (int) game.getCamera().viewportHeight / cellSize;
-        int gridCols = (int) game.getCamera().viewportWidth / cellSize;
+        gridRows = (int) game.getCamera().viewportHeight / cellSize;
+        gridCols = (int) game.getCamera().viewportWidth / cellSize;
 
         mapGrid = new Array[gridRows + 2][gridCols + 2];
         for (int i = 0; i < mapGrid.length; i++) {
@@ -94,7 +103,7 @@ public class Level implements Screen {
                 ("fire")).getEllipse();
         int radius = ((int) (ellipse.circumference() / 6));
         roomLight = new Circle(ellipse.x + radius, ellipse.y + radius, radius);
-        addAnimation(new VfxEntity(this, ellipse.x + 2, ellipse.y + 2, "vfx/fire/", 6, 0.5F,
+        addAnimation(new VfxEntity(this, ellipse.x + 2, ellipse.y + 2, "vfx/fire/", 6, 0.4F,
                                    false));
 
         shadows = gameMap.getLayers().get("shadows").getObjects().getByType(PolygonMapObject.class);
@@ -106,6 +115,21 @@ public class Level implements Screen {
         mapRenderer.setView(game.getCamera());
 
         shapeRenderer = game.getShapeRenderer();
+
+        pathFinder = new PathFinder(this);
+        tileMap = pathFinder.getTileMap();
+    }
+
+    public int getRows() {
+        return gridRows;
+    }
+
+    public int getCols() {
+        return gridCols;
+    }
+
+    public Tile[][] getTileMap() {
+        return tileMap;
     }
 
     public void addMapObjects(Object obj) {
@@ -132,7 +156,7 @@ public class Level implements Screen {
                 addMapObject(player);
             } else if (entity.getName().equals("Enemy")) {
                 addMapObject(new Enemy(this, entityRect.getX(), entityRect.getY()));
-            } else {
+            } else if (entity.getName().equals("Treasure")) {
                 addMapObject(new Treasure(this, entityRect.getX(), entityRect.getY()));
             }
         }
@@ -165,7 +189,7 @@ public class Level implements Screen {
             return "Godly Sneakmeister Deluxe";
         } else if (timesSeen < 5) {
             return "Corvo would be proud";
-        } else if (getScore() == 0) {
+        } else if (getScore() < 200) {
             return "You have failed this city";
         } else {
             return "No, it hurts to see you try";
@@ -256,16 +280,15 @@ public class Level implements Screen {
     /**
      * Returns an ArrayList of the entities in the grid cells
      * that are intersected by the entity given as a parameter.
-     * @param entity    The entity that will cause collisions.
      * @return  ArrayList of entities that could be collided with.
      */
-    public ArrayList<Object> getEntities(Entity entity, float newX, float newY) {
+    public ArrayList<Object> getEntities(float width, float height, float newX, float newY) {
         ArrayList<Object> possibleEntities = new ArrayList<>();
         int topLeftX = ((int) (newX / cellSize));
         int topLeftY = ((int) (newY / cellSize));
 
-        int bottomRightX = ((int) ((newX + entity.getWidth()) / cellSize));
-        int bottomRightY = ((int) ((newY + entity.getHeight()) / cellSize));
+        int bottomRightX = ((int) ((newX + width) / cellSize));
+        int bottomRightY = ((int) ((newY + height) / cellSize));
 
         for (int i = topLeftY; i <= bottomRightY; i++) {
             for (int j = topLeftX; j <= bottomRightX; j++) {
