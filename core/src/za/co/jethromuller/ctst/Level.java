@@ -14,10 +14,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Ellipse;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import za.co.jethromuller.ctst.entities.*;
 import za.co.jethromuller.ctst.menus.GameOverScreen;
@@ -25,6 +22,7 @@ import za.co.jethromuller.ctst.menus.PauseMenu;
 import za.co.jethromuller.ctst.menus.ScoreScreen;
 import za.co.jethromuller.ctst.pathfinding.PathFinder;
 import za.co.jethromuller.ctst.pathfinding.Tile;
+import za.co.jethromuller.ctst.pathfinding.Waypoint;
 
 import java.util.ArrayList;
 
@@ -334,6 +332,17 @@ public class Level implements Screen {
                 shapeRenderer.circle(enemy.visionRange.x, enemy.visionRange.y, enemy.visionRange.radius);
                 shapeRenderer.circle(enemy.hearingRange.x, enemy.hearingRange.y, enemy.hearingRange.radius);
                 shapeRenderer.circle(enemy.smellRange.x, enemy.smellRange.y, enemy.smellRange.radius);
+
+                if (enemy.visionRay != null) {
+                    shapeRenderer.line(enemy.visionRay.origin, enemy.visionRay.getEndPoint(new
+                                                                                                   Vector3(), new Vector2(enemy.getOriginX(), enemy.getOriginY()).dst(player.getX(), player.getY())));
+                }
+
+                if (enemy.getWaypoints() != null) {
+                    for (Waypoint waypoint : enemy.getWaypoints()) {
+                        shapeRenderer.circle(waypoint.getX(), waypoint.getY(), 5);
+                    }
+                }
             } else {
                 shapeRenderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
             }

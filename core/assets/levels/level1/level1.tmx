@@ -32,13 +32,13 @@
  </objectgroup>
  <objectgroup name="obstacles" width="20" height="20">
   <object name="wall" x="21" y="61" width="281" height="18"/>
-  <object name="wall" x="14" y="17" width="5" height="367"/>
-  <object name="wall" x="17" y="380" width="369" height="6"/>
-  <object name="wall" x="15" y="13" width="371" height="7"/>
-  <object name="wall" x="379" y="17" width="6" height="364"/>
+  <object name="wall" x="-1" y="0" width="20" height="399"/>
+  <object name="wall" x="17" y="380" width="369" height="21"/>
+  <object name="wall" x="18" y="-1" width="384" height="20"/>
+  <object name="wall" x="382" y="18" width="20" height="384"/>
   <object name="wall" x="259" y="160" width="21" height="60"/>
-  <object name="wall" x="260" y="260" width="20" height="39"/>
-  <object name="wall" x="259" y="320" width="20" height="60"/>
+  <object name="wall" x="258" y="258" width="22" height="39"/>
+  <object name="wall" x="259" y="322" width="20" height="58"/>
   <object name="fire" x="68" y="307" width="25" height="24">
    <ellipse/>
   </object>
