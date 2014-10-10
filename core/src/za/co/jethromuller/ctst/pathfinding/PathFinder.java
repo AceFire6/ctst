@@ -22,15 +22,15 @@ public class PathFinder {
         rows = level.getRows();
         columns = level.getCols();
         this.level = level;
-        tileMap = new Tile[rows * 4][columns * 4];
+        tileMap = new Tile[rows * 2][columns * 2];
         tileMap = populateTileMap();
     }
 
     private Tile[][] populateTileMap() {
-        for (int i = 0; i < rows * 4; i++) {
-            for (int j = 0; j < columns * 4; j++) {
-                tileMap[i][j] = new Tile(10 * j, 10 * i, 10, 10, j, i);
-                if (isCollision((10 * j), 400 - (10 * (i + 1)))) {
+        for (int i = 0; i < rows * 2; i++) {
+            for (int j = 0; j < columns * 2; j++) {
+                tileMap[i][j] = new Tile(20 * j, 20 * i, 20, 20, j, i);
+                if (isCollision((20 * j) + 5, 400 - (20 * (i + 1)) + 5)) {
                     System.out.print("X ");
                 } else {
                     tileMap[i][j].setTraversable();
@@ -58,7 +58,7 @@ public class PathFinder {
     }
 
     public boolean isCollision(float newX, float newY) {
-        Rectangle newRectangle = new Rectangle(newX, newY, 5, 5);
+        Rectangle newRectangle = new Rectangle(newX, newY, 20, 20);
 
         if (Intersector.overlaps(level.getLightSource(), newRectangle)) {
             return true;
@@ -87,16 +87,16 @@ public class PathFinder {
             }
         }
         PriorityQueue<Tile> openList = new PriorityQueue<>();
-        int xIndex = ((int) (enemyWaypoint.getX() / 10));
-        int yIndex = ((int) (enemyWaypoint.getY() / 10));
+        int xIndex = ((int) (enemyWaypoint.getX() / 20));
+        int yIndex = ((int) (enemyWaypoint.getY() / 20));
         openList.add(tileMap[yIndex][xIndex]);
         System.out.println("START TILE: " + tileMap[yIndex][xIndex].getAsWaypoint());
 
         ArrayList<Tile> closedList = new ArrayList<>();
         Tile currentTile;
 
-        int xPlayer = ((int) (playerWaypoint.getX() / 10));
-        int yPlayer = ((int) (playerWaypoint.getY() / 10));
+        int xPlayer = ((int) (playerWaypoint.getX() / 20));
+        int yPlayer = ((int) (playerWaypoint.getY() / 20));
         Tile endTile = tileMap[yPlayer][xPlayer];
         System.out.println("END TILE: " + endTile.getAsWaypoint());
 

@@ -63,8 +63,6 @@ public class Enemy extends Entity {
             player = currentLevel.getPlayer();
         }
 
-        float speed = 0.9F;
-
         if (Intersector.overlaps(player.getCircleBounds(), getBoundingRectangle())) {
             currentLevel.getGame().musicController.playDeathSound(1F, 1F, 0F);
             currentLevel.lose();
@@ -79,7 +77,6 @@ public class Enemy extends Entity {
                 seen = true;
             }
             visionRadius = 190;
-            speed = 1F;
 
             if (!canSeePlayer()) {
                 if ((System.currentTimeMillis() - pathTime) > 200) {
@@ -120,10 +117,6 @@ public class Enemy extends Entity {
         setTexture();
 
         if (deltaX != 0 || deltaY != 0) {
-            if ((Math.abs(deltaX) == speed) && (Math.abs(deltaY) == speed)) {
-                deltaX *= 0.725;
-                deltaY *= 0.725;
-            }
             collisionDetection(getX() + deltaX, getY());
             collisionDetection(getX(), getY() + deltaY);
 

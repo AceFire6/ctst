@@ -23,7 +23,7 @@ public class Waypoint {
             angle = ((float) (Math.PI / 2));
         }
 
-        double distance = 1.6;
+        double distance = 1.2;
 
         float xComp = ((float) Math.abs(distance * (Math.cos(angle))));
         xComp = (xpart >= 0) ? xComp: -xComp;
