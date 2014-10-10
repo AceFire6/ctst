@@ -8,7 +8,7 @@ public class MainMenu extends Menu {
 
     public MainMenu(CtstGame game) {
         super(game, null, "main_menu.png");
-        yCoords = new int[] {224, 180, 140, 98};
+        yCoords = new int[] {224, 180, 140};
         xCoord = 104;
 
         game.musicController.startMenuMusic();
@@ -22,12 +22,9 @@ public class MainMenu extends Menu {
                 game.setScreen(level1);
                 break;
             case 1:
-                game.setScreen(new SaveSelect(game, this));
-                break;
-            case 2:
                 game.setScreen(new OptionsMenu(game));
                 break;
-            case 3:
+            case 2:
                 Gdx.app.exit();
                 break;
         }
