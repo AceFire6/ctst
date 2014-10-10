@@ -18,8 +18,6 @@ public class Entity extends Sprite {
     protected FileHandle current_file;
     protected Level currentLevel;
 
-    protected boolean collidable;
-
     protected float xOffset = getWidth()/2;
     protected float yOffset = getHeight()/2;
 
@@ -66,6 +64,9 @@ public class Entity extends Sprite {
         }
 
         for (Object entity : currentLevel.getEntities(getWidth(), getHeight(), newX, newY)) {
+            if (entity instanceof Enemy) {
+                continue;
+            }
             if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (!entity.equals(this)) {
@@ -90,14 +91,6 @@ public class Entity extends Sprite {
         Entity entity = (Entity) obj;
 
         return (entity.getX() == getX()) && (entity.getY() == getY());
-    }
-
-    public void setCollidable(boolean collide) {
-        collidable = collide;
-    }
-
-    public boolean isCollidable() {
-        return collidable;
     }
 
     protected void dispose() {
