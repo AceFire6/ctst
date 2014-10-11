@@ -129,6 +129,9 @@ public class Enemy extends Entity {
     }
 
     private boolean canSeePlayer() {
+        if (currentLevel.inShadow(player)) {
+            return false;
+        }
         Ray vision = new Ray(new Vector3(getX(), getY(), 0), new Vector3(player.getX() - getX(),
                                                                          player.getY() - getY(),
                                                                          0));

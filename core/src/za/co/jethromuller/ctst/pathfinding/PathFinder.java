@@ -16,6 +16,7 @@ public class PathFinder {
     private int columns;
     private int rows;
     private Level level;
+    private int gridSize = 20;
 
 
     public PathFinder(Level level) {
@@ -29,8 +30,8 @@ public class PathFinder {
     private Tile[][] populateTileMap() {
         for (int i = 0; i < rows * 2; i++) {
             for (int j = 0; j < columns * 2; j++) {
-                tileMap[i][j] = new Tile(20 * j, (20 * i), 20, 20, j, i);
-                if (isCollision((20 * j), (20 * i))) {
+                tileMap[i][j] = new Tile(gridSize * j, (gridSize * i), gridSize, gridSize, j, i);
+                if (isCollision((gridSize * j), (gridSize * i))) {
                     System.out.print("X ");
                 } else {
                     tileMap[i][j].setTraversable();
@@ -39,8 +40,8 @@ public class PathFinder {
             }
             System.out.println("");
         }
-        System.out.println();
-        printTileMap();
+//        System.out.println();
+//        printTileMap();
         return tileMap;
     }
 
@@ -60,7 +61,7 @@ public class PathFinder {
     }
 
     public boolean isCollision(float newX, float newY) {
-        Rectangle newRectangle = new Rectangle(newX, newY, 20, 20);
+        Rectangle newRectangle = new Rectangle(newX, newY, gridSize, gridSize);
 
         if (Intersector.overlaps(level.getLightSource(), newRectangle)) {
             return true;
@@ -89,16 +90,16 @@ public class PathFinder {
             }
         }
         PriorityQueue<Tile> openList = new PriorityQueue<>();
-        int xIndex = ((int) (enemyWaypoint.getX() / 20));
-        int yIndex = ((int) (enemyWaypoint.getY() / 20));
+        int xIndex = ((int) ((enemyWaypoint.getX() + 10) / gridSize));
+        int yIndex = ((int) ((enemyWaypoint.getY() + 10) / gridSize));
         openList.add(tileMap[yIndex][xIndex]);
         System.out.println("START TILE: " + tileMap[yIndex][xIndex].getAsWaypoint());
 
         ArrayList<Tile> closedList = new ArrayList<>();
         Tile currentTile;
 
-        int xPlayer = ((int) (playerWaypoint.getX() / 20));
-        int yPlayer = ((int) (playerWaypoint.getY() / 20));
+        int xPlayer = ((int) ((playerWaypoint.getX() + 10) / gridSize));
+        int yPlayer = ((int) ((playerWaypoint.getY() + 10)/ gridSize));
         Tile endTile = tileMap[yPlayer][xPlayer];
         System.out.println("END TILE: " + endTile.getAsWaypoint());
 
@@ -119,7 +120,7 @@ public class PathFinder {
                         (tenativeSteps < neighbour.getSteps())) {
                         neighbour.setParent(currentTile);
                         neighbour.setSteps(tenativeSteps);
-                        neighbour.setHeuristic(generateHeuristic(tileMap[yIndex][xIndex], endTile));
+                        neighbour.setHeuristic(generateHeuristic(neighbour, endTile));
                         if (!openList.contains(neighbour)) {
                             openList.add(neighbour);
                         }
@@ -138,16 +139,12 @@ public class PathFinder {
         int yIndex = currentTile.getyIndex();
         int yStart = ((yIndex - 1) > 0) ? yIndex - 1: 0;
         int yEnd = ((yIndex + 1) < tileMap.length) ? yIndex + 1: tileMap.length - 1;
-        System.out.println("yStart = " + yStart);
-        System.out.println("yIndex = " + yIndex);
-        System.out.println("yEnd = " + yEnd);
         for (int y = yStart; y <= yEnd; y++) {
             int xIndex = currentTile.getxIndex();
             int xStart = ((xIndex - 1) > 0) ? xIndex - 1: 0;
             int xEnd = ((xIndex + 1) < tileMap[y].length) ? xIndex + 1: tileMap[y].length - 1;
             for (int x = xStart; x <= xEnd; x++) {
-                if (tileMap[y][x].isTraversable() && !openList.contains(tileMap[y][x]) &&
-                    !closedList.contains(tileMap[y][x]) && !tileMap[y][x].equals(currentTile)) {
+                if (tileMap[y][x].isTraversable() && !tileMap[y][x].equals(currentTile)) {
                     adjacents.add(tileMap[y][x]);
                 }
             }
