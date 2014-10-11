@@ -83,23 +83,23 @@ public class PathFinder {
         return tileMap;
     }
 
-    public Stack<Waypoint> getPath(Waypoint enemyWaypoint, Waypoint playerWaypoint) {
+    public Stack<Waypoint> getPath(Waypoint startWaypoint, Waypoint endWaypoint) {
         for (Tile[] tiles : tileMap) {
             for (Tile tile : tiles) {
                 tile.reset();
             }
         }
         PriorityQueue<Tile> openList = new PriorityQueue<>();
-        int xIndex = ((int) ((enemyWaypoint.getX() + 10) / gridSize));
-        int yIndex = ((int) ((enemyWaypoint.getY() + 10) / gridSize));
+        int xIndex = ((int) ((startWaypoint.getX() + 10) / gridSize));
+        int yIndex = ((int) ((startWaypoint.getY() + 10) / gridSize));
         openList.add(tileMap[yIndex][xIndex]);
         System.out.println("START TILE: " + tileMap[yIndex][xIndex].getAsWaypoint());
 
         ArrayList<Tile> closedList = new ArrayList<>();
         Tile currentTile;
 
-        int xPlayer = ((int) ((playerWaypoint.getX() + 10) / gridSize));
-        int yPlayer = ((int) ((playerWaypoint.getY() + 10)/ gridSize));
+        int xPlayer = ((int) ((endWaypoint.getX() + 10) / gridSize));
+        int yPlayer = ((int) ((endWaypoint.getY() + 10)/ gridSize));
         Tile endTile = tileMap[yPlayer][xPlayer];
         System.out.println("END TILE: " + endTile.getAsWaypoint());
 

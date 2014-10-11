@@ -79,7 +79,7 @@ public class Enemy extends Entity {
             visionRadius = 190;
 
             if (!canSeePlayer()) {
-                if ((System.currentTimeMillis() - pathTime) > 200) {
+                if ((System.currentTimeMillis() - pathTime) > 500) {
                     pathTime = System.currentTimeMillis();
                     waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
                                                                 new Waypoint(player.getX(),
@@ -203,9 +203,6 @@ public class Enemy extends Entity {
         }
 
         for (Object entity : currentLevel.getEntities(getWidth(), getHeight(), newX, newY)) {
-            if (entity instanceof Enemy) {
-                continue;
-            }
             if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (!entity.equals(this)) {
