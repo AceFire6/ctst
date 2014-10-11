@@ -187,7 +187,11 @@ public class Level implements Screen {
             return "Godly Sneakmeister Deluxe";
         } else if (timesSeen < 5) {
             return "Corvo would be proud";
-        } else if (getScore() < 200) {
+        } else if (timesSeen < 10) {
+            return "You're no Sam Fisher";
+        } else if (timesSeen < 15) {
+            return "Maybe try Call of Duty instead?";
+        } else if (getScore() < 100) {
             return "You have failed this city";
         } else {
             return "No, it hurts to see you try";

@@ -29,8 +29,8 @@ public class PathFinder {
     private Tile[][] populateTileMap() {
         for (int i = 0; i < rows * 2; i++) {
             for (int j = 0; j < columns * 2; j++) {
-                tileMap[i][j] = new Tile(20 * j, 20 * i, 20, 20, j, i);
-                if (isCollision((20 * j) + 5, 400 - (20 * (i + 1)) + 5)) {
+                tileMap[i][j] = new Tile(20 * j, (20 * i), 20, 20, j, i);
+                if (isCollision((20 * j), (20 * i))) {
                     System.out.print("X ");
                 } else {
                     tileMap[i][j].setTraversable();
@@ -39,6 +39,8 @@ public class PathFinder {
             }
             System.out.println("");
         }
+        System.out.println();
+        printTileMap();
         return tileMap;
     }
 
@@ -107,7 +109,7 @@ public class PathFinder {
                 return addWaypointsToStack(currentTile);
             } else {
                 closedList.add(currentTile);
-                for (Tile neighbour : getAdjacentTiles(currentTile)) {
+                for (Tile neighbour : getAdjacentTiles(currentTile, openList, closedList)) {
                     if (closedList.contains(neighbour)) {
                         continue;
                     }
@@ -122,16 +124,7 @@ public class PathFinder {
                             openList.add(neighbour);
                         }
                     }
-
-//                    if (!openList.contains(neighbour) &&
-//                        !closedList.contains(neighbour) &&
-//                        neighbour.isTraversable()) {
-//                        openList.add(neighbour);
-//                        calculateTileCost(currentTile, neighbour, endTile);
-////                        System.out.println(neighbour);
-//                    }
                 }
-
             }
 //            printTileMap();
         }
@@ -139,7 +132,8 @@ public class PathFinder {
         return null;
     }
 
-    private ArrayList<Tile> getAdjacentTiles(Tile currentTile) {
+    private ArrayList<Tile> getAdjacentTiles(Tile currentTile, PriorityQueue openList,
+                                             ArrayList closedList) {
         ArrayList<Tile> adjacents = new ArrayList<>();
         int yIndex = currentTile.getyIndex();
         int yStart = ((yIndex - 1) > 0) ? yIndex - 1: 0;
@@ -152,16 +146,13 @@ public class PathFinder {
             int xStart = ((xIndex - 1) > 0) ? xIndex - 1: 0;
             int xEnd = ((xIndex + 1) < tileMap[y].length) ? xIndex + 1: tileMap[y].length - 1;
             for (int x = xStart; x <= xEnd; x++) {
-                adjacents.add(tileMap[y][x]);
+                if (tileMap[y][x].isTraversable() && !openList.contains(tileMap[y][x]) &&
+                    !closedList.contains(tileMap[y][x]) && !tileMap[y][x].equals(currentTile)) {
+                    adjacents.add(tileMap[y][x]);
+                }
             }
         }
         return adjacents;
-    }
-
-    private void calculateTileCost(Tile current, Tile evalTile, Tile goal) {
-        evalTile.setHeuristic(generateHeuristic(evalTile, goal));
-        evalTile.setSteps(current.getSteps() + 1);
-        evalTile.setParent(current);
     }
 
     private int generateHeuristic(Tile start, Tile end) {
@@ -173,7 +164,7 @@ public class PathFinder {
 
     private Stack<Waypoint> addWaypointsToStack(Tile currentTile) {
         Stack<Waypoint> pathStack = new Stack<>();
-        Tile tile = currentTile.getParent().copy();
+        Tile tile = currentTile.copy();
         while (tile != null) {
             pathStack.add(tile.getAsWaypoint());
             if (tile.getParent() != null) {

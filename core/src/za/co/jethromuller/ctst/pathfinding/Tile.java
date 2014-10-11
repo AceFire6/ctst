@@ -79,7 +79,7 @@ public class Tile implements Comparable<Tile> {
     }
 
     public Waypoint getAsWaypoint() {
-        return new Waypoint(x, y);
+        return new Waypoint(x + 10, y + 10);
     }
 
     public String toString() {

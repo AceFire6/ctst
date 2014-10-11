@@ -187,7 +187,7 @@ public class Enemy extends Entity {
         deltaX = coords[0];
         deltaY = coords[1];
 
-        if (Intersector.overlaps(new Circle(getX() + xOffset, getY() + yOffset, 20),
+        if (Intersector.overlaps(new Circle(getX() + xOffset, getY() + yOffset, 15),
                                  waypoint.getCircle())) {
             moving = false;
         }
