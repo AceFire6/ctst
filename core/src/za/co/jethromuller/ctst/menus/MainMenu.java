@@ -11,6 +11,7 @@ public class MainMenu extends Menu {
         yCoords = new int[] {224, 180, 140};
         xCoord = 104;
 
+        OptionsMenu.setOptions(game);
         game.musicController.startMenuMusic();
     }
 

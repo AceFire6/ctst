@@ -105,17 +105,34 @@ public class MusicController {
         }
     }
 
-    public void muteMusic() {
-        muteMusic = ((muteMusic == 1) ? 0 : 1);
+    public void unMuteMusic() {
+        muteMusic = 1;
         updateMusicVolumes();
     }
 
-    public void muteSound() {
-        muteSound = ((muteSound == 1) ? 0 : 1);
+    public void muteMusic() {
+        muteMusic = 0;
+        updateMusicVolumes();
     }
 
-    public void setMusicVolume(float volOffset) {
-        musicVolume += volOffset;
+    public boolean isMusicMuted() {
+        return (muteMusic == 0);
+    }
+
+    public boolean isSoundMuted() {
+        return (muteSound == 0);
+    }
+
+    public void unMuteSound() {
+        muteSound = 1;
+    }
+
+    public void muteSound() {
+        muteSound = 0;
+    }
+
+    public void setMusicVolume(float newVolume) {
+        musicVolume = newVolume;
         updateMusicVolumes();
     }
 
@@ -124,8 +141,8 @@ public class MusicController {
         menuMusic.setVolume(menuVolume * musicVolume * muteMusic);
     }
 
-    public void setSoundVolume(float volOffset) {
-        soundVolume += volOffset;
+    public void setSoundVolume(float newVolume) {
+        soundVolume = newVolume;
     }
 
     public float getMusicVolume() {
