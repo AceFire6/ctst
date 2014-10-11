@@ -159,7 +159,7 @@ public class PathFinder {
         float deltaX = Math.abs(start.getX() - end.getX());
         float deltaY = Math.abs(start.getY() - end.getY());
 
-        return ((int) (deltaX + deltaY - 1));
+        return ((int) Math.max(deltaX, deltaY));
     }
 
     private Stack<Waypoint> addWaypointsToStack(Tile currentTile) {
