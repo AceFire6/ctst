@@ -110,7 +110,7 @@ public class PathFinder {
                 return addWaypointsToStack(currentTile);
             } else {
                 closedList.add(currentTile);
-                for (Tile neighbour : getAdjacentTiles(currentTile, openList, closedList)) {
+                for (Tile neighbour : getAdjacentTiles(currentTile)) {
                     if (closedList.contains(neighbour)) {
                         continue;
                     }
@@ -133,8 +133,7 @@ public class PathFinder {
         return null;
     }
 
-    private ArrayList<Tile> getAdjacentTiles(Tile currentTile, PriorityQueue openList,
-                                             ArrayList closedList) {
+    private ArrayList<Tile> getAdjacentTiles(Tile currentTile) {
         ArrayList<Tile> adjacents = new ArrayList<>();
         int yIndex = currentTile.getyIndex();
         int yStart = ((yIndex - 1) > 0) ? yIndex - 1: 0;
