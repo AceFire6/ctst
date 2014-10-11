@@ -81,9 +81,9 @@ public class Enemy extends Entity {
             if (!canSeePlayer()) {
                 if ((System.currentTimeMillis() - pathTime) > 200) {
                     pathTime = System.currentTimeMillis();
-                    waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()), new Waypoint(
-                            player.getX() + (player.getWidth() / 2),
-                            player.getY() + (player.getHeight() / 2)));
+                    waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
+                                                                new Waypoint(player.getX(),
+                                                                             player.getY()));
 
                     if (waypoints != null && (waypoints.size() != 0)) {
                         moveTo(waypoints.pop());
