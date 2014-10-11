@@ -44,8 +44,8 @@
   </object>
   <object name="staircase" x="171" y="341" width="49" height="38"/>
  </objectgroup>
- <objectgroup name="entities" width="20" height="20" visible="0">
-  <object name="Player" x="345" y="45"/>
+ <objectgroup name="entities" width="20" height="20">
+  <object name="Player" x="288" y="65" width="21" height="21"/>
   <object name="Enemy" x="114" y="337"/>
   <object name="Enemy" x="263" y="339"/>
   <object name="Enemy" x="301" y="211"/>

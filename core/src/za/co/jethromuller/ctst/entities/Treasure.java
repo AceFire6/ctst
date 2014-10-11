@@ -7,7 +7,6 @@ public class Treasure extends Entity {
 
     public Treasure(Level level, float x, float y) {
         super(level, x, y, "entities/diamond.png");
-        setCollidable(true);
     }
 
     public int collect() {

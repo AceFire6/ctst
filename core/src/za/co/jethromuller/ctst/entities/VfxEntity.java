@@ -18,7 +18,6 @@ public class VfxEntity extends Entity {
         animation = currentLevel.getGame().textureController.getAnimation(filePath, steps, timing);
         stateTime = 0f;
         destroyOnComplete = destroyOnCompletion;
-        setCollidable(false);
     }
 
     @Override

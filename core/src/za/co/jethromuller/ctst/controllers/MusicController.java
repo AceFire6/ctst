@@ -12,6 +12,8 @@ public class MusicController {
     private Sound selectSound;
     private Sound collectSound;
     private Sound walkSound;
+    private Sound deathSound;
+
     private final String[] songNames = {"Enthalpy", "Fuckaboing", "OHC3", "Sea_Battles_in_Space",
                                         "Submerged"};
     private int currentSelection = 0;
@@ -50,6 +52,7 @@ public class MusicController {
         selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
         collectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/collect_treasure.ogg"));
         walkSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/walk.wav"));
+        deathSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/player_death.ogg"));
     }
 
     public void startGameMusic() {
@@ -90,23 +93,46 @@ public class MusicController {
         }
     }
 
+    public void playDeathSound(float volume, float pitch, float pan) {
+        if (muteSound == 1) {
+            deathSound.play(volume * soundVolume, pitch, pan);
+        }
+    }
+
     public void playSelectSound(float volume, float pitch, float pan) {
         if (muteSound == 1) {
             selectSound.play(volume * soundVolume, pitch, pan);
         }
     }
 
-    public void muteMusic() {
-        muteMusic = ((muteMusic == 1) ? 0 : 1);
+    public void unMuteMusic() {
+        muteMusic = 1;
         updateMusicVolumes();
     }
 
-    public void muteSound() {
-        muteSound = ((muteSound == 1) ? 0 : 1);
+    public void muteMusic() {
+        muteMusic = 0;
+        updateMusicVolumes();
     }
 
-    public void setMusicVolume(float volOffset) {
-        musicVolume += volOffset;
+    public boolean isMusicMuted() {
+        return (muteMusic == 0);
+    }
+
+    public boolean isSoundMuted() {
+        return (muteSound == 0);
+    }
+
+    public void unMuteSound() {
+        muteSound = 1;
+    }
+
+    public void muteSound() {
+        muteSound = 0;
+    }
+
+    public void setMusicVolume(float newVolume) {
+        musicVolume = newVolume;
         updateMusicVolumes();
     }
 
@@ -115,8 +141,8 @@ public class MusicController {
         menuMusic.setVolume(menuVolume * musicVolume * muteMusic);
     }
 
-    public void setSoundVolume(float volOffset) {
-        soundVolume += volOffset;
+    public void setSoundVolume(float newVolume) {
+        soundVolume = newVolume;
     }
 
     public float getMusicVolume() {

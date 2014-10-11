@@ -131,7 +131,7 @@ public class Player extends Entity {
             return;
         }
 
-        for (Object entity : currentLevel.getEntities(this, newX, newY)) {
+        for (Object entity : currentLevel.getEntities(getWidth(), getHeight(), newX, newY)) {
             if (entity instanceof Treasure) {
                 Treasure treasure = (Treasure) entity;
                 if (Intersector.overlaps(newCircle, treasure.getBoundingRectangle())) {
