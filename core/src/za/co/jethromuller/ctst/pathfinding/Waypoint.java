@@ -12,7 +12,7 @@ public class Waypoint {
         ypoint = y;
     }
 
-    public float[] getAsComponents(float x2, float y2) {
+    public float[] getAsComponents(float x2, float y2, float distance) {
         float xpart = this.getX() - x2;
         float ypart = this.getY() - y2;
         float angle = 0;
@@ -22,8 +22,6 @@ public class Waypoint {
         } else {
             angle = ((float) (Math.PI / 2));
         }
-
-        double distance = 1.2;
 
         float xComp = ((float) Math.abs(distance * (Math.cos(angle))));
         xComp = (xpart >= 0) ? xComp: -xComp;

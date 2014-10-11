@@ -183,7 +183,7 @@ public class Enemy extends Entity {
     }
 
     private void moveTo(Waypoint waypoint) {
-        float[] coords = waypoint.getAsComponents(getX(), getY());
+        float[] coords = waypoint.getAsComponents(getX(), getY(), 1.4F);
         deltaX = coords[0];
         deltaY = coords[1];
 
