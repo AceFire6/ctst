@@ -8,6 +8,29 @@ MLLJET001</h3>
 My second year game development project. A 2D top-down stealth based game.
 See [here](jethromuller.co.za/projects/game-development/second-year/ctst/) for more information.
 
+Each level is generated based on the given tmx file.
+
+The required layer are called:
+
+* obstacles
+* shadows
+* entities
+
+In the obstacles layer, there are two required objects.  
+A light source labelled "fire" and a staircase labelled "staircase".
+
+In the entities layer, there are 3 types of possible entities that are handled:
+
+* Enemy
+* Player
+* Treasure
+
+The appropriate entity class with the given coordinate will be spawned at the locations given by 
+the map.
+
+The map must be in the levels folder, in a folder with the same name as the map.  
+For example, tutorialLevel is located in `/levels/tutorialLevel/tutorialLevel.tmx`
+
 ### Instructions
 
 1. Navigate to the root of the cloned directory.
