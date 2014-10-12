@@ -17,7 +17,7 @@ public class ScoreScreen extends Menu {
         font = new BitmapFont();
 
         nextLevelIndex = currentLevel.getLevelIndex() + 1;
-        game.preferences.putString("lastLevel", currentLevel.getLevelName());
+        game.preferences.putString("lastLevel", game.levelNames.get(nextLevelIndex));
         game.preferences.flush();
     }
 
