@@ -38,7 +38,7 @@ public class OptionsMenu extends Menu{
         muteMusic = new Rectangle(313, 112, 18, 19);
 
         float musicOffset = (game.musicController.getMusicVolume() * sliderDistance);
-        float soundOffset = (game.musicController.getSoundVolume() * sliderDistance);
+        float soundOffset = ((game.musicController.getSoundVolume() + 0.5F) * sliderDistance);
         sliderBarMusic = new Rectangle(barX + musicOffset, musicSliderY, 15, 30);
         sliderBarSound = new Rectangle(barX + soundOffset, soundSliderY, 15, 30);
 
@@ -68,7 +68,7 @@ public class OptionsMenu extends Menu{
                 game.musicController.unMuteMusic();
                 game.musicController.unMuteSound();
                 game.musicController.setMusicVolume(1F);
-                game.musicController.setSoundVolume(1F);
+                game.musicController.setSoundVolume(0.5F);
                 break;
             case 5:
                 String optionCsv = game.musicController.getMusicVolume() + "," +
@@ -107,14 +107,14 @@ public class OptionsMenu extends Menu{
         } else if (option == 1) {
             float soundVol = game.musicController.getSoundVolume();
             if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                if (soundVol > 0.2) {
-                    game.musicController.setSoundVolume(soundVol - 0.2F);
+                if (soundVol + 0.5F > 0.1) {
+                    game.musicController.setSoundVolume(soundVol - 0.1F);
                 } else {
                     game.musicController.playSelectSound(1F, 0.25F, 0F);
                 }
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                if (soundVol < 1) {
-                    game.musicController.setSoundVolume(soundVol + 0.2F);
+                if (soundVol + 0.5F < 1) {
+                    game.musicController.setSoundVolume(soundVol + 0.1F);
                 } else {
                     game.musicController.playSelectSound(1F, 0.25F, 0F);
                 }
@@ -122,7 +122,7 @@ public class OptionsMenu extends Menu{
         }
 
         float musicOffset = (game.musicController.getMusicVolume() * sliderDistance);
-        float soundOffset = (game.musicController.getSoundVolume() * sliderDistance);
+        float soundOffset = ((game.musicController.getSoundVolume() + 0.5F) * sliderDistance);
         sliderBarMusic.setPosition(barX + musicOffset, musicSliderY);
         sliderBarSound.setPosition(barX + soundOffset, soundSliderY);
 

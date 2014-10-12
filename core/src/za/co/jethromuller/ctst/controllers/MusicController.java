@@ -23,10 +23,10 @@ public class MusicController {
     private int muteSound = 1;
 
     private float musicVolume = 1F;
-    private float soundVolume = 1F;
+    private float soundVolume = 0.5F;
 
-    private float songVolume = 0.3F;
-    private float menuVolume = 0.2F;
+    private float songVolume = 0.4F;
+    private float menuVolume = 0.3F;
 
 
     public MusicController() {
@@ -89,33 +89,23 @@ public class MusicController {
     }
 
     public void playSelectSound() {
-        if (muteSound == 1) {
-            selectSound.play(1F * soundVolume);
-        }
+        selectSound.play(1F * soundVolume * muteSound);
     }
 
     public void playCollectSound() {
-        if (muteSound == 1) {
-            collectSound.play(1F * soundVolume);
-        }
+        collectSound.play(1F * soundVolume * muteSound);
     }
 
     public void playWalkSound(float volume, float pitch, float pan) {
-        if (muteSound == 1) {
-            walkSound.play(volume * soundVolume, pitch, pan);
-        }
+        walkSound.play(volume * soundVolume * muteSound, pitch, pan);
     }
 
     public void playDeathSound(float volume, float pitch, float pan) {
-        if (muteSound == 1) {
-            deathSound.play(volume * soundVolume, pitch, pan);
-        }
+        deathSound.play(volume * soundVolume * muteSound, pitch, pan);
     }
 
     public void playSelectSound(float volume, float pitch, float pan) {
-        if (muteSound == 1) {
-            selectSound.play(volume * soundVolume, pitch, pan);
-        }
+        selectSound.play(volume * soundVolume * muteSound, pitch, pan);
     }
 
     public void unMuteMusic() {
