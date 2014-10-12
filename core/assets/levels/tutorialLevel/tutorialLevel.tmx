@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="20" tileheight="20">
+ <tileset firstgid="1" name="tutorialLevel" tilewidth="20" tileheight="20">
+  <image source="tutorialLevel.png" width="400" height="400"/>
+ </tileset>
+ <tileset firstgid="401" name="tutorialLevel_no_light" tilewidth="20" tileheight="20">
+  <image source="tutorialLevel_no_light.png" width="400" height="400"/>
+ </tileset>
+ <layer name="gameMapDark" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwN03WDDwYAANCfO3G663TbZkyPzcQwG5taYWKbbibGmNxMT7vjdDen63R3d3eeczrfH+8jvBFxAoGRjGI0YxjLOMYTRjgTmEgEk5jMFKYyjenMYCazmM0c5jKP+SxgIYtYzBKWsoxIlrOClaxiNWtYyzrWs4GNRLGJzWxhK9vYzg52sovd7GEv+9jPAQ5yiMMc4SjHOM4JTnKK05zhLOc4zwUuconLXOEq17jODW5yi9vc4S73uM8DHhLNI2J4TCxPeMoznvOCl7ziNW94yzsCQYFAHIIIJi7xiE8CQkhIIhKThKQkIzkpSEkqUpOGtKQjPRnISCiZyEwWspKN7OQgJ7nITR7yko/8fMCHfEQBPqYghfiEwhShKMUoTglK8imlKM1nfE4ZvqAs5ShPBb6kIpWozFdU4Wu+oSrV+JbvqE4NalKL2nzPD/zIT/xMHepSj1+oTwMa0ohf+Y3faUwTmtKM5rSgJa1oTRva0o72dKAjf9CJznShK3/Sje78RQ968je96E0f+tKP/vzDvwzgPwYyiMEMYSjDGM7/jGAkoxjNGMYyjvGEEc4EJhLBJCYzhalMYzozmMksZjOHucxjPgtYyCIWs4SlLCOS5axgJatYzRrWso71bGAjUWxiM1vYyja2s4Od7GI3e9jLPvZzgIMc4jBHOMoxjnOCk5ziNGc4yznOc4GLXOIyV7jKNa5zg5vc4jZ3uMs97vOAh0TziBgeE8sTnvKM57zgJa94zRve8o5AsP8EEUxc4hGfBISQkEQkJglJSUZyUpCSVKQmDWlJR3oykJFQMpGZLGQlG9l5D/IW2xs=
+  </data>
+ </layer>
+ <layer name="gameMapLight" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwNwwOUEAYAANDLti5c9uUuX7Ztuy67u2wbW27L3DK22rJtY4tb3OJQ/73/IwUEBEQ2ilGNZnRjGNNYxjaOcY1nfBOY0EQmNolJTWZyUxhoSlOZ2jQGmdZ0pjeDGc1kZrOY1WxmN4c5DTaXuc1jXvOZ3wIWNMRCFraIRS1mcUsYaklLWdoylrWc5a1gRStZ2SpWtZrVrWFNa1nbOta1nvVtYEMb2dgmNrWZzW1hS1vZ2ja2tZ3t7WBHO9nZLnY1zG52t4c97WVv+9jXfvZ3gAMd5GDDjXCIQx3mcEc40lGOdoxjHed4JzjRSU52ilOd5nRnONNZznaOc53nfL/xWxe40EUudolLXeZyv/N7V7jSVa52jWtd53o3uNFNbvYHf3SLW93mdne4013udo97/cmf3ed+f/FXD3jQQx72iEc95nFPeNJTnvaMZz3neS940Ute9opXveZ1b3jTW972jne9530f+NDf/N1HPvaJT33mc//wT1/40le+9o1v/cu/fed7P/jRT372H//1P//3iwGRMLJRjGo0oxvDmMYytnGMazzjm8CEJjKxSUxqMpObwkBTmsrUpjHItKYzvRnMaCYzm8WsZjO7OcxpsLnMbR7zms/8FrCgIRaysEUsajGLW8JQS1rK0paxrOUsbwUrWsnKVrGq1axuDWtay9rWsa71rG8DG9rIxjaxqc1sbgtb2srWtrGt7WxvBzvayc52sathdrO7PexpL3vbx772s78DHOggBxtuhEMc6jCHO8KRjnK0YxzrOMc7wYlOcrJTnOo0pzvDmX4FUpio2g==
+  </data>
+ </layer>
+ <objectgroup name="shadows" width="20" height="20" visible="0">
+  <object x="27" y="24">
+   <polygon points="0,0 300,-1 259,59 0,40"/>
+  </object>
+  <object x="23" y="84">
+   <polygon points="0,0 4,292 116,292 115,0"/>
+  </object>
+  <object x="139" y="340">
+   <polygon points="0,0 20,-31 17,-91 -2,-91"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="obstacles" width="20" height="20">
+  <object name="fire" x="225" y="144" width="22" height="23">
+   <ellipse/>
+  </object>
+  <object name="staircase" x="296" y="330" width="54" height="49"/>
+  <object name="wall" x="-2" y="0" width="28" height="401"/>
+  <object name="wall" x="25" y="-1" width="375" height="23"/>
+  <object name="wall" x="376" y="22" width="24" height="379"/>
+  <object name="wall" x="26" y="375" width="350" height="27"/>
+  <object name="wall" x="27" y="61" width="257" height="26"/>
+  <object name="wall" x="135" y="87" width="28" height="166"/>
+  <object name="wall" x="136" y="264" width="25" height="44"/>
+  <object name="wall" x="137" y="340" width="23" height="36"/>
+ </objectgroup>
+ <objectgroup name="entities" width="20" height="20">
+  <object name="Player" x="201" y="33" width="20" height="21"/>
+  <object name="Enemy" x="81" y="113"/>
+  <object name="Treasure" x="95" y="294"/>
+  <object name="Treasure" x="56" y="288"/>
+  <object name="Treasure" x="70" y="317"/>
+ </objectgroup>
+</map>
