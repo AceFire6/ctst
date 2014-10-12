@@ -36,7 +36,7 @@ public class OptionsMenu extends Menu{
         muteMusic = new Rectangle(313, 112, 18, 19);
 
         float musicOffset = (game.musicController.getMusicVolume() * sliderDistance);
-        float soundOffset = ((game.musicController.getSoundVolume() + 0.5F) * sliderDistance);
+        float soundOffset = ((game.musicController.getSoundVolume() * 2) * sliderDistance);
         sliderBarMusic = new Rectangle(barX + musicOffset, musicSliderY, 15, 30);
         sliderBarSound = new Rectangle(barX + soundOffset, soundSliderY, 15, 30);
 
@@ -51,11 +51,19 @@ public class OptionsMenu extends Menu{
             case 1:
                 break;
             case 2:
-                game.musicController.muteSound();
+                if (!soundMuted) {
+                    game.musicController.muteSound();
+                } else {
+                    game.musicController.unMuteSound();
+                }
                 soundMuted = !soundMuted;
                 break;
             case 3:
-                game.musicController.muteMusic();
+                if (!musicMuted) {
+                    game.musicController.muteMusic();
+                } else {
+                    game.musicController.unMuteMusic();
+                }
                 musicMuted = !musicMuted;
                 break;
             case 4:
@@ -107,16 +115,18 @@ public class OptionsMenu extends Menu{
                 }
             }
         } else if (option == 1) {
-            float soundVol = game.musicController.getSoundVolume();
+            float soundVol = (game.musicController.getSoundVolume() * 2);
             if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                if (soundVol + 0.5F > 0.1) {
-                    game.musicController.setSoundVolume(soundVol - 0.1F);
+                if (soundVol > 0.1) {
+                    game.musicController.setSoundVolume((soundVol / 2) - 0.1F);
+                    game.musicController.playSelectSound();
                 } else {
                     game.musicController.playSelectSound(1F, 0.25F, 0F);
                 }
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                if (soundVol + 0.5F < 1) {
-                    game.musicController.setSoundVolume(soundVol + 0.1F);
+                if (soundVol < 1) {
+                    game.musicController.setSoundVolume((soundVol / 2) + 0.1F);
+                    game.musicController.playSelectSound();
                 } else {
                     game.musicController.playSelectSound(1F, 0.25F, 0F);
                 }
@@ -124,7 +134,7 @@ public class OptionsMenu extends Menu{
         }
 
         float musicOffset = (game.musicController.getMusicVolume() * sliderDistance);
-        float soundOffset = ((game.musicController.getSoundVolume() + 0.5F) * sliderDistance);
+        float soundOffset = ((game.musicController.getSoundVolume() * 2) * sliderDistance);
         sliderBarMusic.setPosition(barX + musicOffset, musicSliderY);
         sliderBarSound.setPosition(barX + soundOffset, soundSliderY);
 

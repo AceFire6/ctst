@@ -140,7 +140,7 @@ public class MusicController {
     }
 
     private void updateMusicVolumes() {
-        songs[currentSelection].setVolume(musicVolume * musicVolume * muteMusic);
+        songs[currentSelection].setVolume(songVolume * musicVolume * muteMusic);
         menuMusic.setVolume(menuVolume * musicVolume * muteMusic);
     }
 
