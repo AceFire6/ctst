@@ -48,6 +48,11 @@ public class Enemy extends Entity {
     private Stack<Waypoint> waypoints;
     private Waypoint target;
     private boolean moving;
+    private int collisionCounterX;
+    private int collisionCounterY;
+    private boolean wasCollision;
+    private float collisionTimerX = 0F;
+    private float collisionTimerY = 0F;
 
 
     /**
@@ -95,32 +100,27 @@ public class Enemy extends Entity {
         }
 
         // All the detection circles and conditions.
-        if ((Intersector.overlaps(player.getCircleBounds(), visionRange) &&
-             !currentLevel.inShadow(player)) || (player.isMoving() && !player.isSneaking() &&
-                    Intersector.overlaps(hearingRange, player.getNoiseMarker())) ||
-                   Intersector.overlaps(smellRange, player.getCircleBounds())) {
+        if (canSeePlayer()) { // If the player can be seen. Move towards them.
             if (!seen) { // If the player gets seen, they lose points.
                 currentLevel.seePlayer();
                 seen = true;
             }
             visionRadius = 190;
 
-            if (!canSeePlayer()) {
+            waypoints = null;
+            moveTo(new Waypoint(player.getX(), player.getY()));
+        } else if (player.isMoving() && !player.isSneaking() && Intersector.overlaps(hearingRange, player.getNoiseMarker())) {
             // If the player can't be seen and it's been 0.5s since the
             // last check, find a path.
-                if ((System.currentTimeMillis() - pathTime) > 500) {
-                    pathTime = System.currentTimeMillis();
-                    waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
-                                                                new Waypoint(player.getX(),
-                                                                             player.getY()));
+            if ((System.currentTimeMillis() - pathTime) > 500) {
+                pathTime = System.currentTimeMillis();
+                waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
+                                                            new Waypoint(player.getX(),
+                                                                         player.getY()));
 
-                    if (waypoints != null && (waypoints.size() != 0)) {
-                        moveTo(waypoints.pop());
-                    }
+                if (waypoints != null && (waypoints.size() != 0)) {
+                    moveTo(waypoints.pop());
                 }
-            } else { // If the player can be seen. Move towards them.
-                waypoints = null;
-                moveTo(new Waypoint(player.getX(), player.getY()));
             }
         } else if (waypoints != null && (waypoints.size() != 0)) {
         // If there are waypoints to move to, move to them.
@@ -171,56 +171,60 @@ public class Enemy extends Entity {
         if (currentLevel.inShadow(player)) {
             return false;
         }
-        Ray vision = new Ray(new Vector3(getX(), getY(), 0), new Vector3(player.getX() - getX(),
-                                                                         player.getY() - getY(),
-                                                                         0));
+        if (Intersector.overlaps(player.getCircleBounds(), visionRange)) {
+            Ray vision = new Ray(new Vector3(getX() + 10, getY() + 10, 0), new Vector3(
+                    player.getX() + 10 - getX(), player.getY() + 10 - getY(), 0));
 
-        visionRay = vision; // This is done so it can be rendered.
-        Vector2 enemyPosition = new Vector2(getX(), getY());
-        Object closestObject = null;
-        double distance = Double.MAX_VALUE;
+            visionRay = vision; // This is done so it can be rendered.
+            Vector2 enemyPosition = new Vector2(getX(), getY());
+            Object closestObject = null;
+            double distance = Double.MAX_VALUE;
 
-        for (RectangleMapObject rectangleMapObject : currentLevel.getObstacles()) {
-            Rectangle currentRect = rectangleMapObject.getRectangle();
+            for (RectangleMapObject rectangleMapObject : currentLevel.getObstacles()) {
+                Rectangle currentRect = rectangleMapObject.getRectangle();
 
-            Vector3 minimum = new Vector3(currentRect.getX(), currentRect.getY(), 0);
-            Vector3 maximum = new Vector3(currentRect.getX() + currentRect.width,
-                                          currentRect.getY() + currentRect.height, 0);
+                Vector3 minimum = new Vector3(currentRect.getX(), currentRect.getY(), 0);
+                Vector3 maximum = new Vector3(
+                        currentRect.getX() + currentRect.width,
+                        currentRect.getY() + currentRect.height, 0);
 
-            BoundingBox collisionBox = new BoundingBox(minimum, maximum);
+                BoundingBox collisionBox = new BoundingBox(minimum, maximum);
 
-            if (Intersector.intersectRayBounds(vision, collisionBox, new Vector3())) {
-                Vector2 currentVector = new Vector2(currentRect.getX(), currentRect.getY());
+                if (Intersector.intersectRayBounds(vision, collisionBox, new Vector3())) {
+                    Vector2 currentVector = new Vector2(currentRect.getX(), currentRect.getY());
 
-                if (enemyPosition.dst(currentVector) < distance) {
-                    distance = enemyPosition.dst(currentVector);
-                    closestObject = rectangleMapObject;
+                    if (enemyPosition.dst(currentVector) < distance) {
+                        distance = enemyPosition.dst(currentVector);
+                        closestObject = rectangleMapObject;
+                    }
                 }
             }
-        }
 
-        float circleX = currentLevel.getLightSource().x;
-        float circleY = currentLevel.getLightSource().y;
-        float radius = currentLevel.getLightSource().radius;
+            float circleX = currentLevel.getLightSource().x;
+            float circleY = currentLevel.getLightSource().y;
+            float radius = currentLevel.getLightSource().radius;
 
-        Vector3 minimum = new Vector3(circleX - radius, circleY - radius, 0);
-        Vector3 maximum = new Vector3(circleX + radius, circleY + radius, 0);
+            Vector3 minimum = new Vector3(circleX - radius, circleY - radius, 0);
+            Vector3 maximum = new Vector3(circleX + radius, circleY + radius, 0);
 
-        if (Intersector.intersectRayBounds(vision, new BoundingBox(minimum, maximum), new Vector3())) {
-            Vector2 currentVector = new Vector2(minimum.x, minimum.y);
-            if (enemyPosition.dst(currentVector) < distance) {
-                distance = enemyPosition.dst(currentVector);
-                closestObject = currentLevel.getLightSource();
+            if (Intersector.intersectRayBounds(vision, new BoundingBox(minimum, maximum), new Vector3())) {
+
+                Vector2 currentVector = new Vector2(minimum.x, minimum.y);
+                if (enemyPosition.dst(currentVector) < distance) {
+                    distance = enemyPosition.dst(currentVector);
+                    closestObject = currentLevel.getLightSource();
+                }
+            }
+
+            // If there is a closest object, check to see if the player is closer.
+            if (closestObject != null) {
+                Vector2 playerPosition = new Vector2(player.getX(), player.getY());
+                return distance > enemyPosition.dst(playerPosition);
+            } else {
+                return true;
             }
         }
-
-        // If there is a closest object, check to see if the player is closer.
-        if (closestObject != null) {
-            Vector2 playerPosition = new Vector2(player.getX(), player.getY());
-            return distance > enemyPosition.dst(playerPosition);
-        } else {
-            return true;
-        }
+        return false;
     }
 
     /**
