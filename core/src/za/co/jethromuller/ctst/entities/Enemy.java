@@ -203,6 +203,9 @@ public class Enemy extends Entity {
         }
 
         for (Object entity : currentLevel.getEntities(getWidth(), getHeight(), newX, newY)) {
+            if (entity instanceof Enemy) {
+                continue;
+            }
             if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (!entity.equals(this)) {
