@@ -7,6 +7,7 @@ import za.co.jethromuller.ctst.Level;
 
 public class ScoreScreen extends Menu {
     private BitmapFont font;
+    private int nextLevelIndex;
 
 
     public ScoreScreen(CtstGame game, Level currentLevel) {
@@ -14,14 +15,22 @@ public class ScoreScreen extends Menu {
         yCoords = new int[] {84, 50};
         xCoord = 115;
         font = new BitmapFont();
+
+        nextLevelIndex = currentLevel.getLevelIndex() + 1;
+        game.preferences.putString("lastLevel", currentLevel.getLevelName());
+        game.preferences.flush();
     }
 
     @Override
     public void handleMenuOptions() {
         switch (option) {
             case 0:
-                Level level2 = new Level(game, "level2");
-                game.setScreen(level2);
+                if (nextLevelIndex >= game.levelNames.size()) {
+                    game.setScreen(new GameWinScreen(game));
+                } else {
+                    Level nextLevel = new Level(game, game.levelNames.get(nextLevelIndex), nextLevelIndex);
+                    game.setScreen(nextLevel);
+                }
                 break;
             case 1:
                 game.setScreen(new MainMenu(game));

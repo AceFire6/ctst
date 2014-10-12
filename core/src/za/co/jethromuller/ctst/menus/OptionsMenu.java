@@ -145,7 +145,7 @@ public class OptionsMenu extends Menu{
     }
 
     public static void setOptions(CtstGame game) {
-        Preferences options = Gdx.app.getPreferences("CTST");
+        Preferences options = game.preferences;
         if (options.contains("options")) {
             String[] optionValues = options.getString("options").split(",");
             game.musicController.setMusicVolume(Float.parseFloat(optionValues[0]));

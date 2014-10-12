@@ -61,3 +61,6 @@ Under CC BY-SA license [creativecommons.org/licenses/by-sa/4.0/](http://creative
 
 [Enthalpy](http://freemusicarchive.org/music/Rolemusic/~/03_rolemusic_-_enthalpy) by [Rolemusic](http://freemusicarchive.org/music/Rolemusic/)  
 Under CC BY license [creativecommons.org/licenses/by/4.0/](http://creativecommons.org/licenses/by/4.0/)
+
+[Moduless](http://freemusicarchive.org/music/Paza/The_Slaphappy_Bee_III_EP/Moduless) by [Paza](http://freemusicarchive.org/music/Paza/)  
+Under CC BY-NC-ND license [creativecommons.org/licenses/by-nc-nd/3.0/](http://creativecommons.org/licenses/by-nc-nd/3.0/)

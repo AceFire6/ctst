@@ -47,6 +47,9 @@ public class Menu implements Screen {
         additionalBatchRender();
         batch.end();
 
+        if (yCoords == null) {
+            return;
+        }
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         additionalShapeRender();
         shapeRenderer.setColor(1F, 0.23F, 0.23F, 1);
@@ -55,6 +58,9 @@ public class Menu implements Screen {
     }
 
     private void handleControls() {
+        if (yCoords == null) {
+            return;
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             option = (option > 0 ? option - 1: option);
             game.musicController.playSelectSound();

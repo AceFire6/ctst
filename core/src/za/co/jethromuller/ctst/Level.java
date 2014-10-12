@@ -68,6 +68,7 @@ public class Level implements Screen {
 
     private String levelPath = "levels/*/*.tmx";
     private String levelName;
+    private int levelIndex;
     private int cellSize;
     private boolean lightsOff;
 
@@ -95,11 +96,12 @@ public class Level implements Screen {
      * @param game     The game object that holds information the level object will need.
      * @param level    A String that holds the name of th level.
      */
-    public Level(CtstGame game, String level) {
+    public Level(CtstGame game, String level, int levelIndex) {
         super();
         this.game = game;
         this.batch = game.getBatch();
 
+        this.levelIndex = levelIndex;
         levelName = level;
         entities = new Array<>();
         animations = new Array<>();
@@ -139,6 +141,10 @@ public class Level implements Screen {
         shapeRenderer = game.getShapeRenderer();
 
         pathFinder = new PathFinder(this);
+    }
+
+    public int getLevelIndex() {
+        return levelIndex;
     }
 
     public int getRows() {

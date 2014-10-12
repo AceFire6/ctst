@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 public class MusicController {
     private Music[] songs;
     private Music menuMusic;
+    private Music winningMusic;
     private Sound selectSound;
     private Sound collectSound;
     private Sound walkSound;
@@ -44,10 +45,11 @@ public class MusicController {
             songs[i].setOnCompletionListener(onCompletionListener);
         }
 
-        String menuMusicName = "Breaking_In";
-        menuMusic = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", menuMusicName)));
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", "Breaking_In")));
         menuMusic.setVolume(menuVolume * muteMusic * musicVolume);
         menuMusic.setLooping(true);
+
+        winningMusic = Gdx.audio.newMusic(Gdx.files.internal(musicPath.replace("*", "Moduless")));
 
         selectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/main_menu_select.ogg"));
         collectSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/collect_treasure.ogg"));
@@ -73,6 +75,17 @@ public class MusicController {
 
     public void stopMenuMusic() {
         menuMusic.stop();
+    }
+
+    public void playWinningMusic() {
+        stopMenuMusic();
+        winningMusic.play();
+        winningMusic.setVolume(songVolume * muteMusic * musicVolume);
+        winningMusic.setLooping(true);
+    }
+
+    public void stopWinningMusic() {
+        winningMusic.stop();
     }
 
     public void playSelectSound() {

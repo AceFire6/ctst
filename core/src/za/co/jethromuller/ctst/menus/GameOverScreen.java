@@ -15,7 +15,7 @@ public class GameOverScreen extends Menu {
     protected void handleMenuOptions() {
         switch (option) {
             case 0:
-                game.setScreen(new Level(game, currentLevel.getLevelName()));
+                game.setScreen(new Level(game, currentLevel.getLevelName(), currentLevel.getLevelIndex()));
                 break;
             case 1:
                 game.setScreen(new MainMenu(game));
