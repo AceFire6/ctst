@@ -22,14 +22,12 @@ public class OptionsMenu extends Menu{
 
     private int sliderDistance = 200;
 
-    private Preferences options;
     private boolean musicMuted;
     private boolean soundMuted;
 
 
     public OptionsMenu(CtstGame game) {
         super(game, null, "options_menu.png");
-        options = Gdx.app.getPreferences("CTST");
 
         yCoords = new int[] {304, 233, 162, 122, 82, 28};
         xCoord = 90;
@@ -62,24 +60,28 @@ public class OptionsMenu extends Menu{
                 break;
             case 4:
                 game.musicController.playSelectSound(1F, 0.25F, 0F);
-                options.clear();
                 musicMuted = false;
                 soundMuted = false;
                 game.musicController.unMuteMusic();
                 game.musicController.unMuteSound();
                 game.musicController.setMusicVolume(1F);
                 game.musicController.setSoundVolume(0.5F);
+                saveOptions();
                 break;
             case 5:
-                String optionCsv = game.musicController.getMusicVolume() + "," +
-                                   game.musicController.getSoundVolume() + "," +
-                                   String.valueOf(soundMuted) + "," +
-                                   String.valueOf(musicMuted);
-                options.putString("options", optionCsv);
-                options.flush();
+                saveOptions();
                 game.setScreen(new MainMenu(game));
                 break;
         }
+    }
+
+    private void saveOptions() {
+        String optionCsv = game.musicController.getMusicVolume() + "," +
+                           game.musicController.getSoundVolume() + "," +
+                           String.valueOf(soundMuted) + "," +
+                           String.valueOf(musicMuted);
+        game.preferences.putString("options", optionCsv);
+        game.preferences.flush();
     }
 
     @Override
