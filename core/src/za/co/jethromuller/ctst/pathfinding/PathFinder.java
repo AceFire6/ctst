@@ -113,20 +113,20 @@ public class PathFinder {
             }
         }
         PriorityQueue<Tile> openList = new PriorityQueue<>();
-        int xIndex = ((int) ((startWaypoint.getX() + 10) / gridSize));
-        int yIndex = ((int) ((startWaypoint.getY() + 10) / gridSize));
+        int xIndex = (Math.round((startWaypoint.getX()) / gridSize));
+        int yIndex = (Math.round((startWaypoint.getY()) / gridSize));
         openList.add(tileMap[yIndex][xIndex]);
         System.out.println("START TILE: " + tileMap[yIndex][xIndex].getAsWaypoint());
 
         ArrayList<Tile> closedList = new ArrayList<>();
         Tile currentTile;
 
-        int xPlayer = ((int) ((endWaypoint.getX() + 10) / gridSize));
-        int yPlayer = ((int) ((endWaypoint.getY() + 10)/ gridSize));
+        int xPlayer = (Math.round((endWaypoint.getX() + 10) / gridSize));
+        int yPlayer = (Math.round((endWaypoint.getY() + 10)/ gridSize));
         Tile endTile = tileMap[yPlayer][xPlayer];
         System.out.println("END TILE: " + endTile.getAsWaypoint());
 
-        while (!openList.isEmpty() || (closedList.size() < 20)) {
+        while (!openList.isEmpty()) {
             currentTile = openList.poll();
 
             if (currentTile.equals(endTile)) {
