@@ -21,11 +21,32 @@ import za.co.jethromuller.ctst.menus.GameOverScreen;
 import za.co.jethromuller.ctst.menus.PauseMenu;
 import za.co.jethromuller.ctst.menus.ScoreScreen;
 import za.co.jethromuller.ctst.pathfinding.PathFinder;
-import za.co.jethromuller.ctst.pathfinding.Tile;
 import za.co.jethromuller.ctst.pathfinding.Waypoint;
 
 import java.util.ArrayList;
 
+/**
+ * Each level is generated based on the given tmx file.
+ *
+ * The required layer are called:
+ *      - "obstacles"
+ *      - "shadows"
+ *      - "entities"
+ *
+ *  In the obstacles layer, there are two required objects.
+ *  A light source labelled "fire" and a staircase labelled "staircase".
+ *
+ *  In the entities layer, there are 3 types of possible entities that are handled.
+ *      - "Enemy"
+ *      - "Player"
+ *      - "Treasure"
+ *
+ *  The appropriate entity class with the given coordinate will be spawned at the locations given
+ *  by the map.
+ *
+ *  The map must be in the levels folder, in a folder with the same name as the map.
+ *  Eg. `/levels/level1/level1.tmx`
+ */
 public class Level implements Screen {
     /**
      * Grid of the various map positions with each
@@ -63,14 +84,17 @@ public class Level implements Screen {
 
     private Rectangle staircase;
 
-    private Tile[][] tileMap;
-
     private int gridRows;
     private int gridCols;
 
     public PathFinder pathFinder;
 
 
+    /**
+     * Creates a level based on the map with the name given by level.
+     * @param game     The game object that holds information the level object will need.
+     * @param level    A String that holds the name of th level.
+     */
     public Level(CtstGame game, String level) {
         super();
         this.game = game;
@@ -115,7 +139,6 @@ public class Level implements Screen {
         shapeRenderer = game.getShapeRenderer();
 
         pathFinder = new PathFinder(this);
-        tileMap = pathFinder.getTileMap();
     }
 
     public int getRows() {
@@ -124,10 +147,6 @@ public class Level implements Screen {
 
     public int getCols() {
         return gridCols;
-    }
-
-    public Tile[][] getTileMap() {
-        return tileMap;
     }
 
     public void addMapObjects(Object obj) {

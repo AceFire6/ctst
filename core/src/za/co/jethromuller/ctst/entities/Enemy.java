@@ -11,6 +11,17 @@ import za.co.jethromuller.ctst.pathfinding.Waypoint;
 import java.util.Random;
 import java.util.Stack;
 
+/**
+ * Enemy class that has all the behavioural information for the enemies.
+ * It handles collisions and player detection.
+ *
+ * This class is meant to model enemies that are zombies. This should explain their erratic
+ * movements and the way they follow the player.
+ *
+ * An enemy added to a level will randomly patrol until they can either, hear or see the player.
+ * If the player is visible, they will head directly to the player.
+ * If they player isn't visible, they will find the shortest path to the player and follow it.
+ */
 public class Enemy extends Entity {
 
     public Circle visionRange;
@@ -38,6 +49,14 @@ public class Enemy extends Entity {
     private Waypoint target;
     private boolean moving;
 
+
+    /**
+     * Creates an enemy object at the given coordinates that interacts with the specified level.
+     * @param level Level object that holds the world information that is necessary for the enemy
+     *              to act.
+     * @param x The x coordinate.
+     * @param y The y coordinate.
+     */
     public Enemy(Level level, float x, float y) {
         super(level, x, y, "entities/enemy/enemy_down.png");
         visionRange = new Circle(x + xOffset, y + yOffset, visionRadius);
@@ -53,32 +72,42 @@ public class Enemy extends Entity {
         waypoints = new Stack<>();
     }
 
+    /**
+     * Returns the list of all the current waypoints.
+     * Mainly used for drawing them.
+     * @return Stack<Waypoint> object that has all the waypoints in the correct order so the
+     * enemy moves towards the player.
+     */
     public Stack<Waypoint> getWaypoints() {
         return waypoints;
     }
 
     @Override
     public void update() {
-        if (player == null) {
+        if (player == null) { // Get the player object if there isn't already one.
             player = currentLevel.getPlayer();
         }
 
+        // If the enemy reaches the player, the player loses.
         if (Intersector.overlaps(player.getCircleBounds(), getBoundingRectangle())) {
             currentLevel.getGame().musicController.playDeathSound(1F, 1F, 0F);
             currentLevel.lose();
         }
 
+        // All the detection circles and conditions.
         if ((Intersector.overlaps(player.getCircleBounds(), visionRange) &&
              !currentLevel.inShadow(player)) || (player.isMoving() && !player.isSneaking() &&
                     Intersector.overlaps(hearingRange, player.getNoiseMarker())) ||
                    Intersector.overlaps(smellRange, player.getCircleBounds())) {
-            if (!seen) {
+            if (!seen) { // If the player gets seen, they lose points.
                 currentLevel.seePlayer();
                 seen = true;
             }
             visionRadius = 190;
 
             if (!canSeePlayer()) {
+            // If the player can't be seen and it's been 0.5s since the
+            // last check, find a path.
                 if ((System.currentTimeMillis() - pathTime) > 500) {
                     pathTime = System.currentTimeMillis();
                     waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
@@ -89,18 +118,19 @@ public class Enemy extends Entity {
                         moveTo(waypoints.pop());
                     }
                 }
-            } else {
+            } else { // If the player can be seen. Move towards them.
                 waypoints = null;
                 moveTo(new Waypoint(player.getX(), player.getY()));
             }
         } else if (waypoints != null && (waypoints.size() != 0)) {
+        // If there are waypoints to move to, move to them.
 //            System.out.println(waypoints);
             if (!moving) {
                 moving = true;
                 target = waypoints.pop();
             }
             moveTo(target);
-        } else {
+        } else { // Random Movement
             seen = false;
             visionRadius = 80;
             if ((System.currentTimeMillis() - pastTime) > (randTime.nextInt(2000) + 2000)) {
@@ -116,6 +146,7 @@ public class Enemy extends Entity {
 
         setTexture();
 
+        // If there is movement, update all the necessary circles and do collision detection.
         if (deltaX != 0 || deltaY != 0) {
             collisionDetection(getX() + deltaX, getY());
             collisionDetection(getX(), getY() + deltaY);
@@ -128,6 +159,14 @@ public class Enemy extends Entity {
         }
     }
 
+    /**
+     * Uses ray casting to see if the player is visible.
+     * If the player is in the shadows, the player is automatically not visible.
+     *
+     * It casts a ray towards the player and gets all intersected objects. Using these,
+     * it creates vectors and determines if the player is the closest object or not.
+     * @return  boolean saying whether or not the enemy can see the player.
+     */
     private boolean canSeePlayer() {
         if (currentLevel.inShadow(player)) {
             return false;
@@ -136,7 +175,7 @@ public class Enemy extends Entity {
                                                                          player.getY() - getY(),
                                                                          0));
 
-        visionRay = vision;
+        visionRay = vision; // This is done so it can be rendered.
         Vector2 enemyPosition = new Vector2(getX(), getY());
         Object closestObject = null;
         double distance = Double.MAX_VALUE;
@@ -167,8 +206,7 @@ public class Enemy extends Entity {
         Vector3 minimum = new Vector3(circleX - radius, circleY - radius, 0);
         Vector3 maximum = new Vector3(circleX + radius, circleY + radius, 0);
 
-        if (Intersector.intersectRayBounds(vision, new BoundingBox(minimum, maximum),
-                                           new Vector3())) {
+        if (Intersector.intersectRayBounds(vision, new BoundingBox(minimum, maximum), new Vector3())) {
             Vector2 currentVector = new Vector2(minimum.x, minimum.y);
             if (enemyPosition.dst(currentVector) < distance) {
                 distance = enemyPosition.dst(currentVector);
@@ -176,15 +214,19 @@ public class Enemy extends Entity {
             }
         }
 
+        // If there is a closest object, check to see if the player is closer.
         if (closestObject != null) {
             Vector2 playerPosition = new Vector2(player.getX(), player.getY());
-            if (distance > enemyPosition.dst(playerPosition)) {
-                return true;
-            }
+            return distance > enemyPosition.dst(playerPosition);
+        } else {
+            return true;
         }
-        return false;
     }
 
+    /**
+     * Moves the enemy towards the waypoint.
+     * @param waypoint Waypoint containing the x and y coordinates to move to.
+     */
     private void moveTo(Waypoint waypoint) {
         float[] coords = waypoint.getAsComponents(getX(), getY(), 1.4F);
         deltaX = coords[0];
@@ -196,6 +238,11 @@ public class Enemy extends Entity {
         }
     }
 
+    /**
+     * Detects collisions with static game objects.
+     * @param newX    New x coordinate of the enemy.
+     * @param newY    New y coordinate of the enemy.
+     */
     protected void collisionDetection(float newX, float newY) {
         Rectangle newBounds = new Rectangle(newX, newY, getWidth(), getHeight());
         if (Intersector.overlaps(currentLevel.getLightSource(), newBounds)) {
@@ -223,6 +270,9 @@ public class Enemy extends Entity {
         setPosition(newX, newY);
     }
 
+    /**
+     * Sets the texture to the appropraite one given the enemies heading.
+     */
     public void setTexture() {
         if (deltaY > 0) { // up
             if (deltaX > 0) {

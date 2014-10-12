@@ -1,6 +1,12 @@
 package za.co.jethromuller.ctst.pathfinding;
 
 
+/**
+ * A tile in the tileMap object of the PathFinder class.
+ *
+ * Each tile object is essentially a node in the 'graph' being searched for the shortest path.
+ * It holds all the required information (Steps from start and Heuristic value).
+ */
 public class Tile implements Comparable<Tile> {
     private float x;
     private float y;
@@ -152,6 +158,10 @@ public class Tile implements Comparable<Tile> {
     }
 
 
+    /**
+     * Returns a copy of the current tile object.
+     * @return A copy of the tile object.
+     */
     public Tile copy() {
         Tile newTile = new Tile(getX(), getY(), width, height, xIndex, yIndex);
         if (traversable) {
@@ -164,12 +174,16 @@ public class Tile implements Comparable<Tile> {
         return newTile;
     }
 
+    /**
+     * Resets the tile object to it's original state.
+     */
     public void reset() {
         setSteps(0);
         setParent(null);
         setHeuristic(0);
     }
 
+    // Apparently if you override equals, you should override hashCode.
     @Override
     public int hashCode() {
         int result = (x != +0.0f ? Float.floatToIntBits(x) : 0);
