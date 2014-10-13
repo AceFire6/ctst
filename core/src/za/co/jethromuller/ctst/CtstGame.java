@@ -13,10 +13,8 @@ import za.co.jethromuller.ctst.controllers.TextureController;
 import za.co.jethromuller.ctst.menus.MainMenu;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Collections;
 
 /**
  * Main class that handles all the rendering and map and entities.
@@ -50,20 +48,18 @@ public class CtstGame extends Game {
         preferences = Gdx.app.getPreferences("CTST");
 
         try {
-            Scanner fileScanner = new Scanner(new File("levels/levelNames.fn"));
-            while (fileScanner.hasNext()) {
-                levelNames.add(fileScanner.nextLine());
-            }
+            System.out.println(Gdx.files.internal("levelNames.fn").exists());
+            Collections.addAll(levelNames, Gdx.files.internal("levelNames.fn").readString().split("\n"));
             System.out.println(levelNames);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "File name list (fileNames.fn) not found.",
+            JOptionPane.showMessageDialog(null, "Level name list (levelNames.fn) not found.",
                                           "ERROR", JOptionPane.ERROR_MESSAGE);
             Gdx.app.exit();
         }
 
         if (levelNames.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "File name list (fileNames.fn) empty.", "ERROR",
+            JOptionPane.showMessageDialog(null, "Level name list (levelNames.fn) empty.", "ERROR",
                                           JOptionPane.ERROR_MESSAGE);
             Gdx.app.exit();
         }

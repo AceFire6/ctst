@@ -20,7 +20,7 @@ public class ScoreScreen extends Menu {
 
         nextLevelIndex = currentLevel.getLevelIndex() + 1;
 
-        if (nextLevelIndex < game.levelNames.size() - 1) {
+        if (nextLevelIndex < game.levelNames.size()) {
             game.preferences.putString("lastLevel", game.levelNames.get(nextLevelIndex));
             game.preferences.flush();
         } else {
