@@ -232,11 +232,11 @@ public class Enemy extends Entity {
      * @param waypoint Waypoint containing the x and y coordinates to move to.
      */
     private void moveTo(Waypoint waypoint) {
-        float[] coords = waypoint.getAsComponents(getX(), getY(), 1.4F);
+        float[] coords = waypoint.getAsComponents(getX() + xOffset, getY() + yOffset, 1.4F);
         deltaX = coords[0];
         deltaY = coords[1];
 
-        if (Intersector.overlaps(new Circle(getX() + xOffset, getY() + yOffset, 15),
+        if (Intersector.overlaps(new Circle(getX() + xOffset, getY() + yOffset, 10),
                                  waypoint.getCircle())) {
             moving = false;
         }
