@@ -132,6 +132,10 @@ public class Player extends Entity {
         }
     }
 
+    public boolean isThrowRock() {
+        return throwRock;
+    }
+
     private void makeProjectile(int xDir, int yDir) {
         String projectileFile;
         if (!throwRock) {
