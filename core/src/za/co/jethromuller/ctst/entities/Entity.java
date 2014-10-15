@@ -65,7 +65,9 @@ public class Entity extends Sprite {
     }
 
     protected void dispose() {
-        currentLevel.killEntity(this);
-        this.getTexture().dispose();
+        if (!(this instanceof Player)) {
+            currentLevel.killEntity(this);
+            this.getTexture().dispose();
+        }
     }
 }
