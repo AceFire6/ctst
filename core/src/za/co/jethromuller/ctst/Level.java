@@ -63,8 +63,10 @@ public class Level implements Screen {
 
     private ArrayList<Entity> entities;
     private Array<VfxEntity> animations;
+    private VfxEntity fireVfx;
 
     private Player player;
+    private ArrayList<Enemy> enemies;
 
     private String levelPath = "levels/*/*.tmx";
     private String levelName;
@@ -117,18 +119,14 @@ public class Level implements Screen {
         }
 
         gameMap = new TmxMapLoader().load(levelPath.replace("*", level));
+        enemies = new ArrayList<>();
         placeEntities();
         obstacles = gameMap.getLayers().get("obstacles").getObjects().getByType(RectangleMapObject
                                                                                                 .class);
 
         addMapObjects(obstacles);
 
-        Ellipse ellipse = ((EllipseMapObject) gameMap.getLayers().get("obstacles").getObjects().get
-                ("fire")).getEllipse();
-        int radius = ((int) (ellipse.circumference() / 5));
-        roomLight = new Circle(ellipse.x + (ellipse.width / 2), ellipse.y + (ellipse.height / 2),
-                               radius);
-        addAnimation(new VfxEntity(this, ellipse.x, ellipse.y, "vfx/fire/", 6, 0.4F, false));
+        addFire();
 
         shadows = gameMap.getLayers().get("shadows").getObjects().getByType(PolygonMapObject.class);
 
@@ -141,6 +139,16 @@ public class Level implements Screen {
         shapeRenderer = game.getShapeRenderer();
 
         pathFinder = new PathFinder(this);
+    }
+
+    public void addFire() {
+        Ellipse ellipse = ((EllipseMapObject) gameMap.getLayers().get("obstacles").getObjects().get
+                ("fire")).getEllipse();
+        int radius = ((int) (ellipse.circumference() / 5));
+        roomLight = new Circle(ellipse.x + (ellipse.width / 2), ellipse.y + (ellipse.height / 2),
+                               radius);
+        fireVfx = new VfxEntity(this, ellipse.x, ellipse.y, "vfx/fire/", 6, 0.4F, false);
+        addAnimation(fireVfx);
     }
 
     public int getLevelIndex() {
@@ -178,21 +186,24 @@ public class Level implements Screen {
                 player = new Player(this, entityRect.getX(), entityRect.getY());
                 addMapObject(player);
             } else if (entity.getName().equals("Enemy")) {
-                addMapObject(new Enemy(this, entityRect.getX(), entityRect.getY()));
+                Enemy enemy = new Enemy(this, entityRect.getX(), entityRect.getY());
+                enemies.add(enemy);
+                addMapObject(enemy);
             } else if (entity.getName().equals("Treasure")) {
                 addMapObject(new Treasure(this, entityRect.getX(), entityRect.getY()));
             }
         }
     }
 
-    public void lightsOn() {
-        gameMap.getLayers().get("gameMapLight").setVisible(true);
-        lightsOff = false;
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
     }
 
     public void lightsOff() {
         gameMap.getLayers().get("gameMapLight").setVisible(false);
+        animations.removeValue(fireVfx, false);
         lightsOff = true;
+
     }
 
     public void addScore(int score) {

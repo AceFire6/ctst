@@ -23,6 +23,12 @@ public class Player extends Entity {
     private boolean moving;
 
     private float noiseCounter;
+    private float shootTimer;
+
+    private boolean throwRock;
+
+    private int rockCount = 5;
+    private int waterCount = 1;
 
     /**
      * Creates a player object with the given parameters.
@@ -38,6 +44,9 @@ public class Player extends Entity {
         sneaking = false;
         moving = false;
         noiseCounter = 0;
+        shootTimer = 2F;
+
+        throwRock = true;
     }
 
     /**
@@ -46,6 +55,7 @@ public class Player extends Entity {
     @Override
     public void update() {
         noiseCounter += Gdx.graphics.getDeltaTime();
+        shootTimer += Gdx.graphics.getDeltaTime();
         float deltaX = 0;
         float deltaY = 0;
         int speed;
@@ -104,6 +114,41 @@ public class Player extends Entity {
         } else {
             moving = false;
         }
+
+        if (Gdx.input.isKeyJustPressed(Keys.Q)) {
+            throwRock = !throwRock;
+        }
+
+        if (shootTimer > 2F) {
+            if (Gdx.input.isKeyJustPressed(Keys.W)) {
+                makeProjectile(0, 1);
+            } else if (Gdx.input.isKeyJustPressed(Keys.A)) {
+                makeProjectile(-1, 0);
+            } else if (Gdx.input.isKeyJustPressed(Keys.S)) {
+                makeProjectile(0, -1);
+            } else if (Gdx.input.isKeyJustPressed(Keys.D)) {
+                makeProjectile(1, 0);
+            }
+        }
+    }
+
+    private void makeProjectile(int xDir, int yDir) {
+        String projectileFile;
+        if (!throwRock) {
+            projectileFile = "entities/water-bomb.png";
+            waterCount -= 1;
+        } else {
+            projectileFile = "entities/rock.png";
+            rockCount -= 1;
+        }
+
+        if ((!throwRock && waterCount >= 0) || (throwRock && rockCount >= 0)) {
+            Projectile projectile = new Projectile(currentLevel, getX(), getY(), xDir, yDir, projectileFile);
+            currentLevel.addMapObject(projectile);
+        } else {
+            currentLevel.getGame().musicController.playSelectSound(0.5F, 0.5F, 0F);
+        }
+        shootTimer = 0;
     }
 
     public boolean isNoiseReady() {

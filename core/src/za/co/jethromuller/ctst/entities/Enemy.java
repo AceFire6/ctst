@@ -168,6 +168,18 @@ public class Enemy extends Entity {
         }
     }
 
+    public void alertEnemy(float x, float y) {
+        waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
+                                                    new Waypoint(x, y));
+
+        if (waypoints == null) {
+            waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
+                                                        new Waypoint(x - 20, y - 20));
+        }
+
+        moving = false;
+    }
+
     /**
      * Uses ray casting to see if the player is visible.
      * If the player is in the shadows, the player is automatically not visible.

@@ -43,7 +43,11 @@ For example, tutorialLevel is located in `/levels/tutorialLevel/tutorialLevel.tm
 * Press `SHIFT` to toggle sneak mode.
 * Hold `SPACE` to activate your sneak-vision and see the enemies vision and hearing range as well 
 as your noise range.
-
+* Press `W`, `A`, `S` or `D` to throw either a water-bomb or a rock depending on which you have 
+selected.
+ Rocks create noise and can serve as a distraction, water-bombs can put out the light in a level.
+ There are 5 rocks and 1 water-bomb for each level.
+* `Q` changes what you throw.
 * Hold `/` to show all the debug information on screen.
 
 ### Acknowledgements
