@@ -36,6 +36,16 @@ For example, tutorialLevel is located in `/levels/tutorialLevel/tutorialLevel.tm
 1. Navigate to the root of the cloned directory.
 2. Run `./gradlew run`.
 
+
+### Controls
+
+* `Arrow Keys` to move.
+* Press `SHIFT` to toggle sneak mode.
+* Hold `SPACE` to activate your sneak-vision and see the enemies vision and hearing range as well 
+as your noise range.
+
+* Hold `/` to show all the debug information on screen.
+
 ### Acknowledgements
 
 1. The music in the main menu was made by Quintin Clarkson and I using [inudge.net](http://inudge.net/).

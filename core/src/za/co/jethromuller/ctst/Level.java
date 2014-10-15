@@ -462,12 +462,35 @@ public class Level implements Screen {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            shapeRenderer.setColor(1, 1, 0, 1);
+            shapeRenderer.setColor(0.16F, 1, 0.45F, 1);
+            drawSenses();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SLASH)) {
+            shapeRenderer.setColor(0.16F, 1, 0.45F, 1);
             drawMapObstaclesBounds();
             drawShadows();
             drawEntityBounds();
         }
         shapeRenderer.end();
+    }
+
+    private void drawSenses() {
+        for (Entity entity : entities) {
+            if (entity instanceof Enemy) {
+                Enemy enemy = (Enemy) entity;
+                shapeRenderer.circle(enemy.visionRange.x, enemy.visionRange.y, enemy.visionRange.radius);
+                shapeRenderer.circle(enemy.hearingRange.x, enemy.hearingRange.y, enemy.hearingRange.radius);
+
+                if (enemy.visionRay != null) {
+                    shapeRenderer.line(enemy.visionRay.origin, enemy.visionRay.getEndPoint(new
+                                                                                                   Vector3(), new Vector2(enemy.getOriginX(), enemy.getOriginY()).dst(player.getX(), player.getY())));
+                }
+            } else if (entity instanceof Player) {
+                Circle circleNoise = ((Player) entity).getNoiseMarker();
+                shapeRenderer.circle(circleNoise.x, circleNoise.y, circleNoise.radius);
+            }
+        }
     }
 
     public void addAnimation(VfxEntity vfxEntity) {
