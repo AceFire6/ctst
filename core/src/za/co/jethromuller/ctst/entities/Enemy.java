@@ -48,11 +48,7 @@ public class Enemy extends Entity {
     private Stack<Waypoint> waypoints;
     private Waypoint target;
     private boolean moving;
-    private int collisionCounterX;
-    private int collisionCounterY;
-    private boolean wasCollision;
-    private float collisionTimerX = 0F;
-    private float collisionTimerY = 0F;
+    private int collisionCounter = 0;
 
 
     /**
@@ -118,8 +114,16 @@ public class Enemy extends Entity {
                                                             new Waypoint(player.getX(),
                                                                          player.getY()));
 
+                if (waypoints == null) {
+                    waypoints = currentLevel.pathFinder.getPath(new Waypoint(getX(), getY()),
+                                                                new Waypoint(player.getX() - 20,
+                                                                             player.getY() - 20));
+                }
+
                 if (waypoints != null && (waypoints.size() != 0)) {
-                    moveTo(waypoints.pop());
+                    moving = true;
+                    target = waypoints.pop();
+                    moveTo(target);
                 }
             }
         } else if (waypoints != null && (waypoints.size() != 0)) {
@@ -150,6 +154,11 @@ public class Enemy extends Entity {
         if (deltaX != 0 || deltaY != 0) {
             collisionDetection(getX() + deltaX, getY());
             collisionDetection(getX(), getY() + deltaY);
+
+            if (collisionCounter > 100) { // Zombies don't know what to do either
+                collisionCounter = 0;
+                waypoints = null;
+            }
 
             visionRange.set(getX() + xOffset, getY() + yOffset, visionRadius);
             hearingRange.setPosition(getX() + xOffset, getY() + yOffset);
@@ -239,6 +248,7 @@ public class Enemy extends Entity {
         if (Intersector.overlaps(new Circle(getX() + xOffset, getY() + yOffset, 10),
                                  waypoint.getCircle())) {
             moving = false;
+            collisionCounter = 0;
         }
     }
 
@@ -250,23 +260,26 @@ public class Enemy extends Entity {
     protected void collisionDetection(float newX, float newY) {
         Rectangle newBounds = new Rectangle(newX, newY, getWidth(), getHeight());
         if (Intersector.overlaps(currentLevel.getLightSource(), newBounds)) {
+            collisionCounter += 1;
             return;
         }
 
         for (Object entity : currentLevel.getEntities(getWidth(), getHeight(), newX, newY)) {
-            if (entity instanceof Enemy) {
+            if (entity instanceof Enemy || entity instanceof Treasure) {
                 continue;
             }
             if (entity instanceof Entity) {
                 Entity ent = (Entity) entity;
                 if (!entity.equals(this)) {
                     if (Intersector.overlaps(newBounds, ent.getBoundingRectangle())) {
+                        collisionCounter += 1;
                         return;
                     }
                 }
             } else if (entity instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) entity).getRectangle();
                 if (newBounds.overlaps(rect)) {
+                    collisionCounter += 1;
                     return;
                 }
             }
@@ -275,7 +288,7 @@ public class Enemy extends Entity {
     }
 
     /**
-     * Sets the texture to the appropraite one given the enemies heading.
+     * Sets the texture to the appropriate one given the enemies heading.
      */
     public void setTexture() {
         if (deltaY > 0) { // up

@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Circle;
 import za.co.jethromuller.ctst.Level;
 
 /**
@@ -21,6 +19,8 @@ public class Entity extends Sprite {
     protected float xOffset = getWidth()/2;
     protected float yOffset = getHeight()/2;
 
+    protected Circle boundingCircle;
+
     /**
      * Creates a new Entity with the given parameters.
      * @param level        The level that is making the entity.
@@ -33,6 +33,8 @@ public class Entity extends Sprite {
         setPosition(x, y);
         setLevel(level);
         setCurrentFile(fileName);
+
+        boundingCircle = new Circle(x + xOffset, y + xOffset, (getWidth() / 2));
     }
 
     public void setLevel(Level level) {
@@ -50,38 +52,7 @@ public class Entity extends Sprite {
      */
     public void update() {
         //Normal entities don't move
-    }
-
-    /**
-     * Performs all collision tests given the new X and Y coordinates of the player.
-     * @param newX    New x coordinate of the player.
-     * @param newY    New y coordinate of the player.
-     */
-    protected void collisionDetection(float newX, float newY) {
-        Rectangle newBounds = new Rectangle(newX, newY, getWidth(), getHeight());
-        if (Intersector.overlaps(currentLevel.getLightSource(), newBounds)) {
-            return;
-        }
-
-        for (Object entity : currentLevel.getEntities(getWidth(), getHeight(), newX, newY)) {
-            if (entity instanceof Enemy) {
-                continue;
-            }
-            if (entity instanceof Entity) {
-                Entity ent = (Entity) entity;
-                if (!entity.equals(this)) {
-                    if (Intersector.overlaps(newBounds, ent.getBoundingRectangle())) {
-                        return;
-                    }
-                }
-            } else if (entity instanceof RectangleMapObject) {
-                Rectangle rect = ((RectangleMapObject) entity).getRectangle();
-                if (Intersector.overlaps(newBounds, rect)) {
-                    return;
-                }
-            }
-        }
-        setPosition(newX, newY);
+        boundingCircle.setPosition(getX() + xOffset, getY() + xOffset);
     }
 
     public boolean equals(Object obj) {

@@ -163,6 +163,19 @@ public class PathFinder {
      */
     private ArrayList<Tile> getAdjacentTiles(Tile currentTile) {
         ArrayList<Tile> adjacents = new ArrayList<>();
+//        int yIndex = currentTile.getyIndex();
+//        int xIndex = currentTile.getxIndex();
+//
+//        int[][] positions = new int[][] {new int[] {xIndex, yIndex + 1}, new int[] {xIndex, yIndex - 1},
+//                                  new int[] {xIndex - 1, yIndex}, new int[] {xIndex + 1, yIndex}};
+
+//        for (int[] position : positions) {
+//            if (tileMap[position[1]][position[0]] != null &&
+//                tileMap[position[1]][position[0]].isTraversable() &&
+//                !tileMap[position[1]][position[0]].equals(currentTile)) {
+//                adjacents.add(tileMap[position[1]][position[0]]);
+//            }
+//        }
         int yIndex = currentTile.getyIndex();
         int yStart = ((yIndex - 1) > 0) ? yIndex - 1: 0;
         int yEnd = ((yIndex + 1) < tileMap.length) ? yIndex + 1: tileMap.length - 1;

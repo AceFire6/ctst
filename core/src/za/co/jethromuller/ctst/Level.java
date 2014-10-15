@@ -61,7 +61,7 @@ public class Level implements Screen {
     private Circle roomLight;
     private Array<PolygonMapObject> shadows;
 
-    private Array<Entity> entities;
+    private ArrayList<Entity> entities;
     private Array<VfxEntity> animations;
 
     private Player player;
@@ -103,7 +103,7 @@ public class Level implements Screen {
 
         this.levelIndex = levelIndex;
         levelName = level;
-        entities = new Array<>();
+        entities = new ArrayList<>();
         animations = new Array<>();
         cellSize = ((int) (game.getCamera().viewportHeight / 10));
         gridRows = (int) game.getCamera().viewportHeight / cellSize;
@@ -278,7 +278,7 @@ public class Level implements Screen {
             animations.removeValue(((VfxEntity) entity), false);
         } else {
             removeEntity(entity);
-            entities.removeValue(entity, false);
+            entities.remove(entity);
         }
     }
 
@@ -331,9 +331,19 @@ public class Level implements Screen {
      * Draws all the entities.
      */
     public void drawEntities() {
+        ArrayList<Entity> notTreasures = new ArrayList<>();
         for (Entity entity : entities) {
-            entity.update();
-            entity.draw(batch);
+            if (!(entity instanceof Treasure)) {
+                notTreasures.add(entity);
+            } else {
+                entity.update();
+                entity.draw(batch);
+            }
+        }
+
+        for (Entity notTreasure : notTreasures) {
+            notTreasure.update();
+            notTreasure.draw(batch);
         }
     }
 

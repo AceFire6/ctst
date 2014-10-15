@@ -43,7 +43,7 @@
  </objectgroup>
  <objectgroup name="entities" width="20" height="20">
   <object name="Player" x="201" y="33" width="20" height="21"/>
-  <object name="Enemy" x="81" y="113"/>
+  <object name="Enemy" x="79" y="123"/>
   <object name="Treasure" x="95" y="294"/>
   <object name="Treasure" x="56" y="288"/>
   <object name="Treasure" x="70" y="317"/>
