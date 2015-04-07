@@ -6,7 +6,7 @@ MLLJET001</h3>
 ### Description
 
 My second year game development project. A 2D top-down stealth based game.
-See [here](jethromuller.co.za/projects/game-development/second-year/ctst/) for more information.
+See [here](http://www.jethromuller.co.za/projects/game-development/second-year/ctst/) for more information.
 
 Each level is generated based on the given tmx file.
 
